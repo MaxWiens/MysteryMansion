@@ -2,6 +2,13 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
+
+# Editor settings
+/.vs/
+/.vscode/
+*.blend1
+*.pyxel
+
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/

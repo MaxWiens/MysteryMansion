@@ -1,1 +1,3 @@
-# ksu_2020s_gamejam
+# Kstate 2020 fall gamejam submission
+Max Wiens
+Nathan Faltermire

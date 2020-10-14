@@ -1,3 +1,2 @@
 # Kstate 2020 fall gamejam submission
-Max Wiens
-Nathan Faltermire
+Created by Max Wiens & Nathan Faltermire

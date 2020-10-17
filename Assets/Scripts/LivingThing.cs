@@ -7,20 +7,37 @@ public class LivingThing : MonoBehaviour
 {
     public class NoiseEventArgs : EventArgs
     {
-        public float Distance { get; set; }
         public float Volume { get; set; }
     }
-    public delegate void NoiseHeardEventHandler(object sender, NoiseEventArgs args);
-    public event NoiseHeardEventHandler NoiseHeard;
+    public delegate void NoiseHeardEventHandler(LivingThing sender, NoiseEventArgs args);
+    protected event NoiseHeardEventHandler NoiseHeard;
 
-    public virtual void TriggerNoiseHeard(object sender, NoiseEventArgs a)
+    public virtual void TriggerNoiseHeard(LivingThing sender, NoiseEventArgs a)
     {
         NoiseHeard?.Invoke(sender, a);
     }
 
+    protected void MakeNoise(float volume)
+    {
+        Collider[] cols = Physics.OverlapSphere(transform.position, 60f, 1 << LayerMask.NameToLayer("Default"));
+        List<LivingThing> lts = new List<LivingThing>();
+        foreach (Collider c in cols)
+        {
+            LivingThing lt = c.GetComponentInParent<LivingThing>();
+            if (lt != null && lt != this)
+                lts.Add(lt);
+        }
+
+        foreach(LivingThing lt in lts)
+        {
+            float distance = Vector3.Distance(transform.position, lt.transform.position);
+            lt.TriggerNoiseHeard(this, new NoiseEventArgs() { Volume = (volume * lt.NoiseSensitivity) / (distance * distance / 4) });
+        }
+    }
+
     public int Health { get; private set; }
     // Percentage from 1 to 0
-    private float _noiseSensitivity;
+    private float _noiseSensitivity = 1;
     public float NoiseSensitivity {
         get => _noiseSensitivity;
         protected set {
@@ -37,17 +54,5 @@ public class LivingThing : MonoBehaviour
         {
             //die
         }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

@@ -43,7 +43,7 @@ public class Door : MonoBehaviour
         return !locked;
     }
 
-    public IEnumerable<bool> Open(Vector3 userPosition)
+    public IEnumerable<bool> Open(Vector3 userPosition, LivingThing user)
     {
         if (!open && !opening)
         {
@@ -51,6 +51,7 @@ public class Door : MonoBehaviour
                 StopCoroutine(openCoroutine);
             openCoroutine = OpenCoroutine(userPosition);
             StartCoroutine(openCoroutine);
+            user.MakeNoise(40f, LivingThing.SoundSource.Environment);
         }
 
         while (true)

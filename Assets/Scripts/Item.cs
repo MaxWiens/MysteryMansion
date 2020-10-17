@@ -15,9 +15,9 @@ public class Items
         switch (item)
         {
             case Item.Key:
-                return "Art/items/key.png";
+                return "items/key";
             case Item.Axe:
-                return "Art/items/axe.png";
+                return "items/axe";
             /*case Item.Remains:
                 return "remains";*/
             default:

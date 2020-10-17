@@ -18,6 +18,7 @@ public class Human : LivingThing
     public TriggerColliderScript medColl;
     public TriggerColliderScript nearColl;
     public GameObject worldItemPrefab;
+    public SpriteRenderer heldItemRenderer;
 
     protected Actions currentAction;
     private IEnumerator currentActionCooroutine;
@@ -27,7 +28,8 @@ public class Human : LivingThing
 
     const float WalkSpeed = 4f;
     const float PanicSpeed = 4.7f;
-    const float InteractDistance = 1.5f;
+    // keep bigger than the player's radius
+    const float InteractDistance = 1f;
     const float FindInteractableDistance = 15f;
     const float MaxTerror = 35f;
 
@@ -172,6 +174,12 @@ public class Human : LivingThing
         currentAction = Actions.Panic;
         NavMeshAgent.speed = PanicSpeed;
         NavMeshAgent.SetDestination(transform.position - locationOffset);
+
+        if (myItem != Item.None && Random.value < .33f)
+        {
+            DropItem();
+        }
+
         yield return new WaitForSeconds(1f);
         for (int i = 0; i < 2; i++)
         {
@@ -253,10 +261,11 @@ public class Human : LivingThing
         List<Collider> colList = new List<Collider>(colliders);
         bool success = false;
         Interactible interactible = null;
+        Collider col = null;
         while (colList.Count > 0)
         {
             int index = Random.Range(0, colList.Count);
-            Collider col = colList[index];
+            col = colList[index];
 
             interactible = col.GetComponent<Interactible>();
             if (interactible == null)
@@ -289,10 +298,11 @@ public class Human : LivingThing
         else
         {
             investigatedInteractibles.Add(interactible);
-            NavMeshAgent.SetDestination(interactible.transform.position);
+            Vector3 destination = col.ClosestPointOnBounds(transform.position);
+            NavMeshAgent.SetDestination(destination);
             yield return new WaitUntil(() =>
             {
-                return Vector3.Distance(transform.position, interactible.transform.position) < InteractDistance;
+                return Vector3.Distance(transform.position, destination) < InteractDistance;
             });
             NavMeshAgent.speed = 0f;
             MakeNoise(60, SoundSource.Human);
@@ -319,7 +329,17 @@ public class Human : LivingThing
 
     public void DropItem()
     {
-        WorldItem worldItem = Instantiate(worldItemPrefab, transform.position, transform.rotation).GetComponent<WorldItem>();
+        RaycastHit raycast;
+        Vector3 point;
+        if (Physics.Raycast(transform.position, Vector3.down, out raycast, 10f, 1 << LayerMask.NameToLayer("Default")))
+        {
+            point = raycast.point;
+        }
+        else
+        {
+            point = transform.position;
+        }
+        WorldItem worldItem = Instantiate(worldItemPrefab, point, transform.rotation).GetComponent<WorldItem>();
         worldItem.Item = myItem;
         RemoveItem();
     }
@@ -329,12 +349,12 @@ public class Human : LivingThing
         if (item == Item.None)
             return;
         myItem = item;
-        // TODO: add sprite
+        heldItemRenderer.sprite = GetSprite(item);
     }
 
     public void RemoveItem()
     {
         myItem = Item.None;
-        // TODO: remove sprite
+        heldItemRenderer.sprite = null;
     }
 }

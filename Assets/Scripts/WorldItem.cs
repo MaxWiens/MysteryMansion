@@ -11,14 +11,18 @@ public class WorldItem : Interactible
         get => _item;
         set {
             _item = value;
-            renderer.sprite = GetSprite(_item);
+            if (renderer == null)
+                renderer = GetComponent<SpriteRenderer>();
+            if (renderer != null)
+                renderer.sprite = GetSprite(_item);
         }
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        renderer = GetComponent<SpriteRenderer>();
+        if (renderer == null)
+            renderer = GetComponent<SpriteRenderer>();
     }
 
     public override Item FinishSearch()

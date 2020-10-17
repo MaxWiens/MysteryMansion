@@ -33,7 +33,7 @@ public class LivingThing : MonoBehaviour
         NoiseHeard?.Invoke(sender, a);
     }
 
-    protected void MakeNoise(float volume, SoundSource source)
+    public void MakeNoise(float volume, SoundSource source)
     {
         Collider[] cols = Physics.OverlapSphere(transform.position, 60f, 1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Monster"));
         List<LivingThing> lts = new List<LivingThing>();
@@ -47,7 +47,7 @@ public class LivingThing : MonoBehaviour
         foreach(LivingThing lt in lts)
         {
             float distance = Vector3.Distance(transform.position, lt.transform.position);
-            lt.TriggerNoiseHeard(this, new NoiseEventArgs() { Source = source, Volume = (volume * lt.NoiseSensitivity) / (distance * distance / 8) });
+            lt.TriggerNoiseHeard(this, new NoiseEventArgs() { Source = source, Volume = (volume * lt.NoiseSensitivity) / (distance * distance / 4) });
             //lt.TriggerNoiseHeard(this, new NoiseEventArgs() { Source = source, Volume = (volume * lt.NoiseSensitivity) / (distance / 2) });
         }
     }
@@ -95,7 +95,7 @@ public class LivingThing : MonoBehaviour
 
             if (door != null)
             {
-                IEnumerator<bool> doorOpen = door.Open(transform.position).GetEnumerator();
+                IEnumerator<bool> doorOpen = door.Open(transform.position, this).GetEnumerator();
                 StartCoroutine(UseDoor(offMeshLink.startTransform.position, doorOpen));
             }
             else

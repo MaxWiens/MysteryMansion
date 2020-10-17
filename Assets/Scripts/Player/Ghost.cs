@@ -7,35 +7,40 @@ public class Ghost : MonoBehaviour {
 	public float HauntRadius = 1;
 
 	private Haunt _hauntTarget;
+	
+	[SerializeField]
+	private SpriteRenderer _hauntIndicatorRenderer;
+	[SerializeField]
+	private Transform _hauntIndicatorTransform;
 
 	private void Start() {
-		
+		_hauntIndicatorRenderer.enabled = false;
 	}
 
 	private void Update() {   
-		 Collider[] colliders = Physics.OverlapSphere(transform.position, HauntRadius, (1 << LayerMask.NameToLayer("Interactible")) | (1 << LayerMask.NameToLayer("Haunt")));
-		 
+		Collider[] colliders = Physics.OverlapSphere(transform.position, HauntRadius, (1 << LayerMask.NameToLayer("Interactible")) | (1 << LayerMask.NameToLayer("Haunt")));
+		
 
-		foreach(Collider c in colliders){
-			Haunt h = c.GetComponent<Haunt>();
-			if(h != null){
-				_hauntTarget = h;
-				ShowInteractable();
-				break;
+		if(_hauntTarget != null){
+			if(_hauntTarget.IsTriggered)
+				_hauntTarget = null;
+			else if(Game.Input.Player.Interact.triggered){
+				StartCoroutine(_hauntTarget.HauntAction());
 			}
 		}
-		 
-	}
-	
-	private IEnumerator ShowInteractable(){
-		// h.transform
-		// yield break;
 
-		yield return new WaitUntil(() =>
-		{
-				return Vector3.Distance(transform.position, _hauntTarget.transform.position) < HauntRadius;
-		});
+		Haunt h = null;
+		foreach(Collider c in colliders){
+			if((h = c.GetComponent<Haunt>()) != null && !h.IsTriggered) break;
+			else h = null;
+		}
+		if(h != null){
+			_hauntTarget = h;
+			_hauntIndicatorRenderer.enabled = true;
+			_hauntIndicatorTransform.position = _hauntTarget.HauntIndicatorLocation.position;
+		}else{
+			_hauntIndicatorRenderer.enabled = false;
+			_hauntTarget = null;
+		}
 	}
-
-	
 }

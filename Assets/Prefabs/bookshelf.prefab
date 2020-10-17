@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &369690321534118856
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8116408463023054218}
+  m_Layer: 13
+  m_Name: HauntIndicatorLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8116408463023054218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 369690321534118856}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 6.89, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4662233812661256521}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3924200703579284266
 GameObject:
   m_ObjectHideFlags: 0
@@ -27,7 +57,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3924200703579284266}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: -0, y: 0, z: 0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4662233812661256521}
@@ -91,7 +121,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -2432090755550338912, guid: 72375c303e0691c47a842853967f25e2, type: 3}
 --- !u!1 &5474200525871062003
@@ -104,7 +134,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4662233812661256521}
   - component: {fileID: 1710961678063385785}
-  - component: {fileID: 6255946254899496414}
+  - component: {fileID: 2487415872764216525}
   m_Layer: 13
   m_Name: bookshelf
   m_TagString: Untagged
@@ -120,10 +150,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5474200525871062003}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.03, y: 0.059000015, z: -10.349001}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.31697264, y: 0.31697264, z: 0.31697264}
   m_Children:
   - {fileID: 5243211145232281617}
+  - {fileID: 8116408463023054218}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -136,10 +167,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5474200525871062003}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dd3cbf326d825e48886c707d1ff92fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 199ff78b7a71c1349acf9d72684bdd08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &6255946254899496414
+  HauntIndicatorLocation: {fileID: 8116408463023054218}
+  _bookshelfCollider: {fileID: 4111335766395822916}
+--- !u!65 &2487415872764216525
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,5 +183,5 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.81, y: 5.59, z: 1.81}
-  m_Center: {x: 0, y: 2.72, z: -0.23}
+  m_Size: {x: 4.07, y: 5.5, z: 1.69}
+  m_Center: {x: 0, y: 2.94, z: 0.29}

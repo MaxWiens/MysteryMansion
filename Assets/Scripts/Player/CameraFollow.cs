@@ -9,7 +9,7 @@ public class CameraFollow : MonoBehaviour {
 	private Transform _cameraParent;
 	private Vector2 _rotation;
 
-	private const float _vertLookLimit_min = 70;
+	private const float _vertLookLimit_min = 28;
   private const float _vertLookLimit_max = 34;
 
 
@@ -24,8 +24,6 @@ public class CameraFollow : MonoBehaviour {
 
 	void Update() {
 		Vector2 camMovement = Game.Input.Player.Look.ReadValue<Vector2>() * LookSpeed;
-		if(Game.Input.Player.Interact.triggered)
-			Debug.Log("pressed");
 		_rotation.y += camMovement.x;
 		_rotation.x += -camMovement.y;
 		_rotation.x = Mathf.Clamp(_rotation.x, -_vertLookLimit_min, _vertLookLimit_max);

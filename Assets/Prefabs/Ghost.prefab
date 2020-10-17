@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6726236258329399952}
   - component: {fileID: 1523464224517736389}
   - component: {fileID: 5742183009191627710}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: Ghost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 2673171157154373190}
   - component: {fileID: 2673171157154373191}
   - component: {fileID: 2673171157154373208}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,7 +215,7 @@ GameObject:
   - component: {fileID: 9125020353996305266}
   - component: {fileID: 1862036786221877038}
   - component: {fileID: 6410892619087548666}
-  m_Layer: 10
+  m_Layer: 14
   m_Name: HauntIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}

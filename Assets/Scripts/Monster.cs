@@ -6,27 +6,60 @@ using UnityEngine.AI;
 
 public class Monster : LivingThing
 {
-    void Start()
+    public enum Actions { Move, Idle, Chase, InvestigateSound }
+
+    protected Actions currentAction;
+    private IEnumerator currentActionCooroutine;
+
+    public TriggerColliderScript farColl;
+    public TriggerColliderScript medColl;
+    public TriggerColliderScript nearColl;
+    public Transform debugTarget;
+
+    const float WalkSpeed = 3f;
+    const float ChaseSpeed = 3.5f;
+
+    protected override void Start()
     {
+        base.Start();
         NoiseHeard += Monster_OnNoiseHeard;
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        navMeshAgent.Warp(transform.position);
+        NavMeshAgent.Warp(transform.position);
         currentAction = Actions.Idle;
         ChooseAction();
     }
 
-    public enum Actions { Move, Idle, Chase, InvestigateSound }
-    protected Actions currentAction;
-    private IEnumerator currentActionCooroutine;
-    private NavMeshAgent navMeshAgent;
-
-    const float WalkSpeed = 3f;
-    const float ChaseSpeed = 3.5f;
+    protected override void Update()
+    {
+        base.Update();
+        if (nearColl.CollidersHit > 0)
+        {
+            if (currentActionCooroutine != null)
+                StopCoroutine(currentActionCooroutine);
+            currentActionCooroutine = Chase(nearColl[0].transform.parent.position);
+            StartCoroutine(currentActionCooroutine);
+        }
+        else if (medColl.CollidersHit > 0)
+        {
+            if (currentActionCooroutine != null)
+                StopCoroutine(currentActionCooroutine);
+            currentActionCooroutine = Chase(medColl[0].transform.parent.position);
+            StartCoroutine(currentActionCooroutine);
+        }
+        else if (farColl.CollidersHit > 0)
+        {
+            if (currentActionCooroutine != null)
+                StopCoroutine(currentActionCooroutine);
+            currentActionCooroutine = Chase(farColl[0].transform.parent.position);
+            StartCoroutine(currentActionCooroutine);
+        }
+    }
 
     protected void ChooseAction()
     {
         if (currentActionCooroutine != null)
             StopCoroutine(currentActionCooroutine);
+        /*currentActionCooroutine = Move();
+        StartCoroutine(currentActionCooroutine);*/
         switch (currentAction)
         {
             case Actions.Idle:
@@ -65,14 +98,14 @@ public class Monster : LivingThing
     protected IEnumerator Move()
     {
         currentAction = Actions.Move;
-        navMeshAgent.speed = WalkSpeed;
+        NavMeshAgent.speed = WalkSpeed;
         /*yield return new WaitUntil(() =>
         {
             // Check proximity to destination
             return true;
         });*/
         Vector3 dir = Random.onUnitSphere;
-        navMeshAgent.SetDestination(transform.position + dir * 4);
+        NavMeshAgent.SetDestination(transform.position + dir * 4);
         yield return new WaitForSeconds(.5f);
         for (int i = 0; i < 5; i++)
         {
@@ -96,10 +129,10 @@ public class Monster : LivingThing
             {
                 dir = Quaternion.Euler(Random.Range(-25f, 25f), 0, 0) * transform.forward;
             }
-            navMeshAgent.SetDestination(transform.position + dir * 4);
+            NavMeshAgent.SetDestination(transform.position + dir * 4);
             yield return new WaitForSeconds(.5f);
         }
-        /*navMeshAgent.SetDestination(debugTarget.position);
+        /*NavMeshAgent.SetDestination(debugTarget.position);
         yield return new WaitForSeconds(4f);*/
         ChooseAction();
     }
@@ -107,7 +140,7 @@ public class Monster : LivingThing
     protected IEnumerator Idle()
     {
         currentAction = Actions.Idle;
-        navMeshAgent.speed = 0f;
+        NavMeshAgent.speed = 0f;
         yield return new WaitForSeconds(4f);
         ChooseAction();
     }
@@ -115,13 +148,13 @@ public class Monster : LivingThing
     protected IEnumerator InvestigateNoise(Vector3 position)
     {
         currentAction = Actions.InvestigateSound;
-        navMeshAgent.speed = WalkSpeed;
-        navMeshAgent.SetDestination(position);
+        NavMeshAgent.speed = WalkSpeed;
+        NavMeshAgent.SetDestination(position);
         yield return new WaitUntil(() =>
         {
             return Vector3.Distance(transform.position, position) < 1.5f;
         });
-        navMeshAgent.speed = 0;
+        NavMeshAgent.speed = 0;
         yield return new WaitForSeconds(2f);
         ChooseAction();
     }
@@ -144,5 +177,17 @@ public class Monster : LivingThing
             currentActionCooroutine = InvestigateNoise(new Vector3(target.x, target.y, target.z));
             StartCoroutine(currentActionCooroutine);
         }
+    }
+
+    protected IEnumerator Chase(Vector3 location)
+    {
+        currentAction = Actions.Chase;
+        NavMeshAgent.speed = ChaseSpeed;
+        NavMeshAgent.SetDestination(location);
+        yield return new WaitUntil(() =>
+        {
+            return Vector3.Distance(transform.position, location) < 0.5f;
+        });
+        ChooseAction();
     }
 }

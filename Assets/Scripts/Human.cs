@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using static Items;
 
 public class Human : LivingThing
 {
@@ -16,12 +17,13 @@ public class Human : LivingThing
     public TriggerColliderScript farColl;
     public TriggerColliderScript medColl;
     public TriggerColliderScript nearColl;
+    public GameObject worldItemPrefab;
 
     protected Actions currentAction;
     private IEnumerator currentActionCooroutine;
-    private NavMeshAgent navMeshAgent;
     private List<Interactible> investigatedInteractibles;
     private bool lastInvestigateSucceeded;
+    private Item myItem;
 
     const float WalkSpeed = 4f;
     const float PanicSpeed = 4.7f;
@@ -30,22 +32,24 @@ public class Human : LivingThing
     const float MaxTerror = 35f;
 
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
+        myItem = Item.None;
         Terror = 0;
         PanicThreshhold = Random.Range(15, 20);
         TerrorDrain = 0.5f;
         lastInvestigateSucceeded = false;
         investigatedInteractibles = new List<Interactible>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        navMeshAgent.Warp(transform.position);
+        NavMeshAgent.Warp(transform.position);
         currentAction = Actions.Idle;
         ChooseAction();
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
+        base.Update();
         Terror = Mathf.Max(0f, Terror - TerrorDrain);
 
         if (farColl.Triggered)
@@ -77,6 +81,8 @@ public class Human : LivingThing
     {
         if (currentActionCooroutine != null)
             StopCoroutine(currentActionCooroutine);
+        /*currentActionCooroutine = Move();
+        StartCoroutine(currentActionCooroutine);*/
         switch (currentAction)
         {
             case Actions.Panic:
@@ -164,8 +170,8 @@ public class Human : LivingThing
     protected IEnumerator Panic(Vector3 locationOffset)
     {
         currentAction = Actions.Panic;
-        navMeshAgent.speed = PanicSpeed;
-        navMeshAgent.SetDestination(transform.position - locationOffset);
+        NavMeshAgent.speed = PanicSpeed;
+        NavMeshAgent.SetDestination(transform.position - locationOffset);
         yield return new WaitForSeconds(1f);
         for (int i = 0; i < 2; i++)
         {
@@ -190,7 +196,7 @@ public class Human : LivingThing
             {
                 dir = transform.forward;
             }
-            navMeshAgent.SetDestination(transform.position + dir * 10);
+            NavMeshAgent.SetDestination(transform.position + dir * 10);
             yield return new WaitForSeconds(1f);
         }
         ChooseAction();
@@ -199,14 +205,14 @@ public class Human : LivingThing
     protected IEnumerator Move()
     {
         currentAction = Actions.Move;
-        navMeshAgent.speed = WalkSpeed;
+        NavMeshAgent.speed = WalkSpeed;
         /*yield return new WaitUntil(() =>
         {
             // Check proximity to destination
             return true;
         });*/
         Vector3 dir = Random.onUnitSphere;
-        navMeshAgent.SetDestination(transform.position + dir * 4);
+        NavMeshAgent.SetDestination(transform.position + dir * 4);
         yield return new WaitForSeconds(.5f);
         for (int i = 0; i < 5; i++)
         {
@@ -230,10 +236,10 @@ public class Human : LivingThing
             {
                 dir = Quaternion.Euler(Random.Range(-25f, 25f), 0, 0) * transform.forward;
             }
-            navMeshAgent.SetDestination(transform.position + dir * 4);
+            NavMeshAgent.SetDestination(transform.position + dir * 4);
             yield return new WaitForSeconds(.5f);
         }
-        /*navMeshAgent.SetDestination(debugTarget.position);
+        /*NavMeshAgent.SetDestination(debugTarget.position);
         yield return new WaitForSeconds(4f);*/
         ChooseAction();
     }
@@ -241,7 +247,7 @@ public class Human : LivingThing
     protected IEnumerator Investigate()
     {
         currentAction = Actions.Investigate;
-        navMeshAgent.speed = WalkSpeed;
+        NavMeshAgent.speed = WalkSpeed;
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, FindInteractableDistance, 1 << LayerMask.NameToLayer("Interactible"));
         List<Collider> colList = new List<Collider>(colliders);
@@ -283,15 +289,15 @@ public class Human : LivingThing
         else
         {
             investigatedInteractibles.Add(interactible);
-            navMeshAgent.SetDestination(interactible.transform.position);
+            NavMeshAgent.SetDestination(interactible.transform.position);
             yield return new WaitUntil(() =>
             {
                 return Vector3.Distance(transform.position, interactible.transform.position) < InteractDistance;
             });
-            navMeshAgent.speed = 0f;
+            NavMeshAgent.speed = 0f;
             MakeNoise(60, SoundSource.Human);
             yield return new WaitForSeconds(4f);
-            GameObject result = interactible.FinishSearch();
+            GetItem(interactible.FinishSearch());
             lastInvestigateSucceeded = true;
         }
         ChooseAction();
@@ -300,7 +306,7 @@ public class Human : LivingThing
     protected IEnumerator Idle()
     {
         currentAction = Actions.Idle;
-        navMeshAgent.speed = 0f;
+        NavMeshAgent.speed = 0f;
         yield return new WaitForSeconds(4f);
         ChooseAction();
     }
@@ -309,5 +315,32 @@ public class Human : LivingThing
     {
         Handles.Label(transform.position + Vector3.up, currentAction.ToString());
         Gizmos.DrawWireSphere(transform.position, FindInteractableDistance);
+    }
+
+    public void PickupItem(WorldItem worldItem)
+    {
+        GetItem(worldItem.Item);
+        Destroy(worldItem.gameObject);
+    }
+
+    public void DropItem()
+    {
+        WorldItem worldItem = Instantiate(worldItemPrefab, transform.position, transform.rotation).GetComponent<WorldItem>();
+        worldItem.Item = myItem;
+        RemoveItem();
+    }
+
+    public void GetItem(Item item)
+    {
+        if (item == Item.None)
+            return;
+        myItem = item;
+        // TODO: add sprite
+    }
+
+    public void RemoveItem()
+    {
+        myItem = Item.None;
+        // TODO: remove sprite
     }
 }

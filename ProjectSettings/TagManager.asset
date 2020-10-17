@@ -14,11 +14,12 @@ TagManager:
   - 
   - 
   - Interactible
-  - Player Vision
-  - Player
+  - Human Vision
+  - Human
   - Monster Vision
   - Monster
   - Haunt
+  - Player
   - 
   - 
   - 

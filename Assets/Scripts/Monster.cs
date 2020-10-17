@@ -71,14 +71,32 @@ public class Monster : LivingThing
             // Check proximity to destination
             return true;
         });*/
-        Vector3 movementDirection = Random.onUnitSphere;
-        navMeshAgent.SetDestination(transform.position + movementDirection * 4);
+        Vector3 dir = Random.onUnitSphere;
+        navMeshAgent.SetDestination(transform.position + dir * 4);
         yield return new WaitForSeconds(.5f);
         for (int i = 0; i < 5; i++)
         {
-            movementDirection += Random.onUnitSphere / Random.Range(3f, 4f);
-            movementDirection = movementDirection.normalized;
-            navMeshAgent.SetDestination(transform.position + movementDirection * 4);
+            if (Physics.Raycast(transform.position, transform.forward, 2f, 1 << LayerMask.NameToLayer("Default")))
+            {
+                dir = -transform.forward;
+                for (int n = 0; n < 20; n++)
+                {
+                    float angle = Random.Range(35f, 145f);
+                    if (Random.value < 0.5f)
+                        angle = -angle;
+                    if (!Physics.Raycast(transform.position, Quaternion.Euler(angle, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default")))
+                    {
+                        dir = Quaternion.Euler(angle, 0, 0) * transform.forward;
+                        break;
+                    }
+                }
+                Debug.Log($"Walking monster turned from {transform.forward} to {dir}");
+            }
+            else
+            {
+                dir = Quaternion.Euler(Random.Range(-25f, 25f), 0, 0) * transform.forward;
+            }
+            navMeshAgent.SetDestination(transform.position + dir * 4);
             yield return new WaitForSeconds(.5f);
         }
         /*navMeshAgent.SetDestination(debugTarget.position);
@@ -115,9 +133,10 @@ public class Monster : LivingThing
 
     private void Monster_OnNoiseHeard(LivingThing sender, NoiseEventArgs a)
     {
-        Debug.Log($"{this} heard a noise with a volume of {a.Volume}");
         // Hyperbolic equation thing
-        if (currentAction != Actions.Chase && Random.Range(0f, 1f) < (1 - (1 / (1 + a.Volume * 0.1f))))
+        float investigateChance = (1 - (1 / (1 + a.Volume * 0.3f)));
+        Debug.Log($"{this} heard a noise with a volume of {a.Volume}, has {investigateChance} chance");
+        if (currentAction != Actions.Chase && Random.value < investigateChance)
         {
             if (currentActionCooroutine != null)
                 StopCoroutine(currentActionCooroutine);

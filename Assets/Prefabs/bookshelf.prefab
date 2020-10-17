@@ -104,7 +104,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4662233812661256521}
   - component: {fileID: 1710961678063385785}
-  m_Layer: 0
+  - component: {fileID: 6255946254899496414}
+  m_Layer: 13
   m_Name: bookshelf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,3 +139,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dd3cbf326d825e48886c707d1ff92fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &6255946254899496414
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474200525871062003}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.81, y: 5.59, z: 1.81}
+  m_Center: {x: 0, y: 2.72, z: -0.23}

@@ -15,11 +15,11 @@ public class Items
         switch (item)
         {
             case Item.Key:
-                return "key";
+                return "Art/items/key.png";
             case Item.Axe:
-                return "axe";
-            case Item.Remains:
-                return "remains";
+                return "Art/items/axe.png";
+            /*case Item.Remains:
+                return "remains";*/
             default:
                 throw new NotImplementedException();
         }

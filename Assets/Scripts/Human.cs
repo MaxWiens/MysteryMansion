@@ -317,12 +317,6 @@ public class Human : LivingThing
         Gizmos.DrawWireSphere(transform.position, FindInteractableDistance);
     }
 
-    public void PickupItem(WorldItem worldItem)
-    {
-        GetItem(worldItem.Item);
-        Destroy(worldItem.gameObject);
-    }
-
     public void DropItem()
     {
         WorldItem worldItem = Instantiate(worldItemPrefab, transform.position, transform.rotation).GetComponent<WorldItem>();

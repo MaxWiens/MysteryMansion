@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour {
   public float Speed = 4f;
   [SerializeField]
-  private Rigidbody _rigidBody;
+  private Rigidbody _rigidBody = null;
 
   private void Update() {
     Vector2 v = Game.Input.Player.Move.ReadValue<Vector2>();

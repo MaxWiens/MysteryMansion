@@ -171,6 +171,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HauntIndicatorLocation: {fileID: 8116408463023054218}
+  IsTriggered: 0
+  EnergyCost: 1
+  EnergyCount: 1
   _bookshelfCollider: {fileID: 4111335766395822916}
 --- !u!65 &2487415872764216525
 BoxCollider:

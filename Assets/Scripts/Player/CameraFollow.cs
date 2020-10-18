@@ -6,7 +6,7 @@ public class CameraFollow : MonoBehaviour {
 	public float LookSpeed = 1f;
 
 	[SerializeField]
-	private Transform _cameraParent;
+	private Transform _cameraParent = null;
 	private Vector2 _rotation;
 
 	private const float _vertLookLimit_min = 28;

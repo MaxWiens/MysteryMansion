@@ -2,13 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 public class BookshelfHaunt : Haunt {
+
   private const float _TIME_TO_FALL = 0.5F;
   [SerializeField]
-  private Collider _bookshelfCollider;
+  private Collider _bookshelfCollider = null;
   public override IEnumerator HauntAction(){
     if(IsTriggered) yield break;
     IsTriggered = true;
-    
+
     Quaternion q = transform.rotation;
     float time = 0f;
     // set collision to trigger

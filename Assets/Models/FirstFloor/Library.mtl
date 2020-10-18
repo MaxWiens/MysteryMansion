@@ -1,10 +1,23 @@
 # Blender MTL File: 'FirstFloor.blend'
-# Material Count: 1
+# Material Count: 2
 
-newmtl None
-Ns 500
-Ka 0.8 0.8 0.8
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
+newmtl Carpet
+Ns 24.099163
+Ka 0.750000 0.750000 0.750000
+Kd 0.005451 0.103548 0.010600
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+
+newmtl Wood
+Ns 10.710747
+Ka 0.318182 0.318182 0.318182
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:\\Users\\frog\\Documents\\dev\\game\\ksu-2020f-gamejam\\Assets\\Art\\LongWood.png

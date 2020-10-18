@@ -7,6 +7,11 @@ using static Items;
 
 public class Human : LivingThing
 {
+    public SpriteRenderer IndicatorRenderer;
+    public Sprite ScaredSprite;
+    public Sprite InvestigatingSprite;
+    public Sprite FoundSomethingSprite;
+
     public enum Actions { Investigate, Move, Panic, Idle, Altar }
 
     public float Terror { get; protected set; }
@@ -112,6 +117,7 @@ public class Human : LivingThing
 
     protected void ChooseAction()
     {
+        IndicatorRenderer.sprite = null;
         if (currentActionCooroutine != null)
             StopCoroutine(currentActionCooroutine);
         /*currentActionCooroutine = Move();
@@ -161,6 +167,7 @@ public class Human : LivingThing
                         else
                         {
                             // Who ever said they were smart?
+
                             currentActionCooroutine = Investigate();
                             StartCoroutine(currentActionCooroutine);
                         }
@@ -222,6 +229,7 @@ public class Human : LivingThing
 
     protected IEnumerator Panic(Vector3 locationOffset)
     {
+        IndicatorRenderer.sprite = ScaredSprite;
         currentAction = Actions.Panic;
         NavMeshAgent.speed = PanicSpeed;
         NavMeshAgent.SetDestination(transform.position - locationOffset);
@@ -311,6 +319,7 @@ public class Human : LivingThing
 
     protected IEnumerator Investigate()
     {
+        IndicatorRenderer.sprite = InvestigatingSprite;
         currentAction = Actions.Investigate;
         NavMeshAgent.speed = WalkSpeed;
 
@@ -370,7 +379,10 @@ public class Human : LivingThing
                 if (interactible.GetItems().Length > 1)
                     StartCoroutine(ForgetInteractible(interactible));
                 Item i = interactible.TakeItem(this);
-                if (MyItem != Item.None)
+                if(i!= Item.None)
+                    IndicatorRenderer.sprite = FoundSomethingSprite;
+                    
+                if (MyItem != Item.None && i != Item.None)
                 {
                     if (MyItem < i)
                     {

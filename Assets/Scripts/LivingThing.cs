@@ -18,7 +18,7 @@ public abstract class LivingThing : MonoBehaviour
         }
     }
 
-    public enum SoundSource { Human, Monster, Environment }
+    public enum SoundSource { Human, Monster, Environment, HumanDeath }
     public class NoiseEventArgs : EventArgs
     {
         public float Volume { get; set; }
@@ -71,11 +71,26 @@ public abstract class LivingThing : MonoBehaviour
         Debug.Log($"{this} took {damage} damage");
         if (Health < 0)
         {
-            SpriteRenderer corpseRenderer = Instantiate(corpsePrefab, transform.position, Quaternion.Euler(0, 0, 90)).GetComponent<SpriteRenderer>();
+            RaycastHit raycast;
+            Vector3 point;
+            Vector3 raycastPosition = transform.position;
+            raycastPosition.y += 5;
+            if (Physics.Raycast(raycastPosition, Vector3.down, out raycast, 10f, 1 << LayerMask.NameToLayer("Default")))
+            {
+                point = raycast.point;
+            }
+            else
+            {
+                point = transform.position;
+            }
+            SpriteRenderer corpseRenderer = Instantiate(corpsePrefab, point, Quaternion.Euler(0, 0, 90)).GetComponent<SpriteRenderer>();
             SpriteRenderer myRenderer = GetMainSpriteRenderer();
             corpseRenderer.sprite = myRenderer.sprite;
             if (this is Human h)
+            {
                 h.DropItem();
+                MakeNoise(80, SoundSource.HumanDeath);
+            }
             Destroy(gameObject);
         }
     }

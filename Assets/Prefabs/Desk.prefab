@@ -11,13 +11,14 @@ GameObject:
   - component: {fileID: 8546053693767126200}
   - component: {fileID: 6795511628357285362}
   - component: {fileID: 8028576677559177574}
-  - component: {fileID: 349635307482519076}
-  m_Layer: 0
+  - component: {fileID: 116386725}
+  - component: {fileID: 116386724}
+  m_Layer: 8
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &8546053693767126200
 Transform:
@@ -80,8 +81,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &349635307482519076
-MeshCollider:
+--- !u!65 &116386725
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -90,10 +91,22 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: edae2a0d7bebb554b916ec75239e1e5f, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 3.1050608, y: 3, z: 2.1795154}
+  m_Center: {x: 0, y: 0.6, z: -0.03975756}
+--- !u!114 &116386724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 589832945573404547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb8738b35a8214a4da2e7342bd503a9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items: 
 --- !u!1 &8476418881586128730
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,12 +116,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9145010652994780640}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Desk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &9145010652994780640
 Transform:
@@ -117,7 +130,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8476418881586128730}
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.28, y: 0.67, z: -13.82}
   m_LocalScale: {x: 0.48169, y: 0.48169, z: 0.48169}
   m_Children:

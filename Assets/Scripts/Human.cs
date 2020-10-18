@@ -28,8 +28,8 @@ public class Human : LivingThing
     private bool lastInvestigateSucceeded;
     private float attackCooldown;
 
-    const float WalkSpeed = 4f;
-    const float PanicSpeed = 4.7f;
+    const float WalkSpeed = 2f;
+    const float PanicSpeed = 2.35f;
     // keep bigger than the player's radius
     const float InteractDistance = 1f;
     const float FindInteractableDistance = 7.5f;
@@ -48,6 +48,7 @@ public class Human : LivingThing
         investigatedInteractibles = new List<Interactible>();
         NavMeshAgent.Warp(transform.position);
         currentAction = Actions.Idle;
+        NoiseHeard += Human_NoiseHeard;
         ChooseAction();
     }
 
@@ -353,7 +354,9 @@ public class Human : LivingThing
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         Handles.Label(transform.position + Vector3.up, currentAction.ToString());
+#endif
         Gizmos.DrawWireSphere(transform.position, FindInteractableDistance);
     }
 
@@ -420,6 +423,20 @@ public class Human : LivingThing
         else
         {
             ChooseAction();
+        }
+    }
+
+    private void Human_NoiseHeard(LivingThing sender, NoiseEventArgs args)
+    {
+        if (args.Source == SoundSource.HumanDeath || args.Source == SoundSource.Monster)
+        {
+            Terror += args.Volume;
+            if (currentAction != Actions.Panic && Terror > PanicThreshhold + 2)
+            {
+                StopCoroutine(currentActionCooroutine);
+                currentActionCooroutine = Panic(sender.transform.position);
+                StartCoroutine(currentActionCooroutine);
+            }
         }
     }
 }

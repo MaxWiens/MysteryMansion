@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - MainSprite
+  - EscapeListener
+  - PausePanel
   layers:
   - Default
   - TransparentFX

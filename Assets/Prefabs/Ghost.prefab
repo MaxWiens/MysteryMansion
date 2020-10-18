@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HauntRadius: 1
+  Energy: 0
   _hauntIndicatorRenderer: {fileID: 6410892619087548666}
   _hauntIndicatorTransform: {fileID: 9125020353996305266}
 --- !u!54 &2397855959530781236
@@ -193,7 +194,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d7a4883da24868442b55751de6414d21, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2cee885c4c8cc3c44add139a04900265, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &8116408463023054218
 Transform:
@@ -41,8 +41,7 @@ GameObject:
   - component: {fileID: 5243211145232281617}
   - component: {fileID: 6923316434245405019}
   - component: {fileID: 5850516474857352655}
-  - component: {fileID: 4111335766395822916}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,20 +109,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &4111335766395822916
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3924200703579284266}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -2432090755550338912, guid: 72375c303e0691c47a842853967f25e2, type: 3}
 --- !u!1 &5474200525871062003
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,12 +120,13 @@ GameObject:
   - component: {fileID: 4662233812661256521}
   - component: {fileID: 1710961678063385785}
   - component: {fileID: 2487415872764216525}
-  m_Layer: 13
+  - component: {fileID: 2044204314}
+  m_Layer: 8
   m_Name: bookshelf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4662233812661256521
 Transform:
@@ -149,7 +135,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5474200525871062003}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.31697264, y: 0.31697264, z: 0.31697264}
   m_Children:
@@ -173,8 +159,8 @@ MonoBehaviour:
   HauntIndicatorLocation: {fileID: 8116408463023054218}
   IsTriggered: 0
   EnergyCost: 1
-  EnergyCount: 1
-  _bookshelfCollider: {fileID: 4111335766395822916}
+  _bookshelfCollider: {fileID: 4111335766395822916, guid: 525be6e73e57e734ca2039a6f76b5d70,
+    type: 3}
 --- !u!65 &2487415872764216525
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -188,3 +174,16 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.07, y: 5.5, z: 1.69}
   m_Center: {x: 0, y: 2.94, z: 0.29}
+--- !u!114 &2044204314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5474200525871062003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb8738b35a8214a4da2e7342bd503a9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  items: 

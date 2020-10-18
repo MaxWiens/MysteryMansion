@@ -17,8 +17,8 @@ public class Monster : LivingThing
     public TriggerColliderScript nearColl;
     public Transform debugTarget;
 
-    const float WalkSpeed = 3f;
-    const float ChaseSpeed = 3.5f;
+    const float WalkSpeed = 1.5f;
+    const float ChaseSpeed = 1.75f;
 
     protected override void Start()
     {
@@ -190,7 +190,9 @@ public class Monster : LivingThing
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         Handles.Label(transform.position + Vector3.up, currentAction.ToString());
+#endif
     }
 
     private void Monster_OnNoiseHeard(LivingThing sender, NoiseEventArgs a)
@@ -228,6 +230,7 @@ public class Monster : LivingThing
             if (other != null)
             {
                 other.TakeDamage(4);
+                MakeNoise(50, SoundSource.Monster);
                 return true;
             }
         }

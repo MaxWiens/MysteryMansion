@@ -37,7 +37,8 @@ public class Ghost : MonoBehaviour {
 		if(_hauntTarget != null){
 			if(_hauntTarget.IsTriggered)
 				_hauntTarget = null;
-			else if(Game.Input.Player.Interact.triggered){
+			else if(Game.Input.Player.Interact.triggered && Energy >= _hauntTarget.EnergyCost)
+			{
 				Energy -= _hauntTarget.EnergyCost;
 				StartCoroutine(_hauntTarget.HauntAction());
 			}

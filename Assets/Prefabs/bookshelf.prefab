@@ -162,6 +162,8 @@ MonoBehaviour:
   EnergyCost: 5
   _sound: {fileID: 5958491853229849657}
   _bookshelfCollider: {fileID: 2487415872764216525}
+  worldItemPrefab: {fileID: 4729532120491571960, guid: f459e58a238f8a34ea75346ef569e0f3,
+    type: 3}
 --- !u!65 &2487415872764216525
 BoxCollider:
   m_ObjectHideFlags: 0

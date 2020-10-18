@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using static Items;
 
 public class BookshelfHaunt : Haunt
 {
@@ -8,6 +9,7 @@ public class BookshelfHaunt : Haunt
     private const float _TIME_TO_FALL = 0.5F;
     [SerializeField]
     private Collider _bookshelfCollider = null;
+    public GameObject worldItemPrefab;
     public override IEnumerator HauntAction()
     {
         if (IsTriggered) yield break;
@@ -46,6 +48,24 @@ public class BookshelfHaunt : Haunt
         }
 
         transform.localScale = new Vector3(0, 0, 1);
+
+        Interactible interactible = GetComponent<Interactible>();
+        foreach (Item item in interactible.GetItems())
+        {
+            Debug.LogWarning("Spawning item");
+            RaycastHit raycast;
+            Vector3 point;
+            if (Physics.Raycast(transform.position, Vector3.down, out raycast, 10f, 1 << LayerMask.NameToLayer("Default")))
+            {
+                point = raycast.point;
+            }
+            else
+            {
+                point = transform.position;
+            }
+            WorldItem worldItem = Instantiate(worldItemPrefab, point, transform.rotation).GetComponent<WorldItem>();
+            worldItem.Item = item;
+        }
 
         yield return new WaitForEndOfFrame();
 

@@ -37,7 +37,7 @@ public class Ghost : MonoBehaviour {
 	}
 
 	private void Update() {
-		
+		//AddEnergy(5);
 		SpookCooldown = Mathf.Clamp(SpookCooldown - Time.deltaTime, 0, MaxSpookCooldown);
 		if (SpookCooldown == 0 && InputManager.Input.Player.Spook.triggered)
 		{

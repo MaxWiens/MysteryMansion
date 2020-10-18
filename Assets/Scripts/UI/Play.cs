@@ -8,6 +8,8 @@ public class Play : MonoBehaviour
     public void OnClick()
     {
         Time.timeScale = 1;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadSceneAsync("Scenes/MainGame");
     }
 }

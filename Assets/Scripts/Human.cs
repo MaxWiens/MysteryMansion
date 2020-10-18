@@ -7,7 +7,7 @@ using static Items;
 
 public class Human : LivingThing
 {
-    public enum Actions { Investigate, Move, Panic, Idle }
+    public enum Actions { Investigate, Move, Panic, Idle, Altar }
 
     public float Terror { get; protected set; }
     public float TerrorDrain { get; protected set; }
@@ -23,11 +23,14 @@ public class Human : LivingThing
     public GameObject hurtbox;
 
     protected Actions currentAction;
+    protected Actions lastAction;
     private IEnumerator currentActionCooroutine;
     private List<Interactible> investigatedInteractibles;
     private bool lastInvestigateSucceeded;
     private float attackCooldown;
     private int maxHealth;
+    private Altar altar;
+    private bool canCheckAltar;
 
     const float WalkSpeed = 2f;
     const float PanicSpeed = 2.35f;
@@ -54,10 +57,13 @@ public class Human : LivingThing
         attackCooldown = 0f;
         lastInvestigateSucceeded = false;
         investigatedInteractibles = new List<Interactible>();
+        altar = GameObject.FindGameObjectWithTag("Altar").GetComponent<Altar>();
         NavMeshAgent.Warp(transform.position);
         currentAction = Actions.Idle;
+        lastAction = Actions.Idle;
         NoiseHeard += Human_NoiseHeard;
         maxHealth = Health;
+        canCheckAltar = true;
         ChooseAction();
         StartCoroutine(Heal());
     }
@@ -109,88 +115,108 @@ public class Human : LivingThing
             StopCoroutine(currentActionCooroutine);
         /*currentActionCooroutine = Move();
         StartCoroutine(currentActionCooroutine);*/
-        switch (currentAction)
+        if (currentAction != Actions.Altar && canCheckAltar)
         {
-            case Actions.Panic:
-                {
-                    float r = Random.Range(0f, 1f);
-                    if (r < .8f)
-                    {
-                        currentActionCooroutine = Move();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    else
-                    {
-                        currentActionCooroutine = Investigate();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    break;
-                }
-            case Actions.Investigate:
-                if (lastInvestigateSucceeded)
-                    goto default;
-                else
-                {
-                    float r = Random.Range(0f, 1f);
-                    if (r < .55f)
-                    {
-                        currentActionCooroutine = Move();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    else if (r < .9f)
-                    {
-                        currentActionCooroutine = Idle();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    else
-                    {
-                        // Who ever said they were smart?
-                        currentActionCooroutine = Investigate();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    break;
-                }
-            case Actions.Idle:
-                {
-                    float r = Random.Range(0f, 1f);
-                    if (r < .475f)
-                    {
-                        currentActionCooroutine = Move();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    else if (r < .95f)
-                    {
-                        currentActionCooroutine = Investigate();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    else
-                    {
-                        currentActionCooroutine = Idle();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    break;
-                }
-            default:
-                {
-                    float r = Random.Range(0f, 1f);
-                    if (r < .4f)
-                    {
-                        currentActionCooroutine = Move();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    else if (r < .8f)
-                    {
-                        currentActionCooroutine = Investigate();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    else
-                    {
-                        currentActionCooroutine = Idle();
-                        StartCoroutine(currentActionCooroutine);
-                    }
-                    break;
-                }
+            StartCoroutine(ResetCanCheckAltar());
+            currentActionCooroutine = CheckAltar();
+            StartCoroutine(currentActionCooroutine);
         }
+        else
+        {
+            currentAction = lastAction;
+            switch (currentAction)
+            {
+                case Actions.Panic:
+                    {
+                        float r = Random.Range(0f, 1f);
+                        if (r < .8f)
+                        {
+                            currentActionCooroutine = Move();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        else
+                        {
+                            currentActionCooroutine = Investigate();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        break;
+                    }
+                case Actions.Investigate:
+                    if (lastInvestigateSucceeded)
+                        goto default;
+                    else
+                    {
+                        float r = Random.Range(0f, 1f);
+                        if (r < .55f)
+                        {
+                            currentActionCooroutine = Move();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        else if (r < .9f)
+                        {
+                            currentActionCooroutine = Idle();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        else
+                        {
+                            // Who ever said they were smart?
+                            currentActionCooroutine = Investigate();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        break;
+                    }
+                case Actions.Idle:
+                    {
+                        float r = Random.Range(0f, 1f);
+                        if (r < .475f)
+                        {
+                            currentActionCooroutine = Move();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        else if (r < .95f)
+                        {
+                            currentActionCooroutine = Investigate();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        else
+                        {
+                            currentActionCooroutine = Idle();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        break;
+                    }
+                case Actions.Altar:
+                    currentActionCooroutine = Move();
+                    StartCoroutine(currentActionCooroutine);
+                    break;
+                default:
+                    {
+                        float r = Random.Range(0f, 1f);
+                        if (r < .4f)
+                        {
+                            currentActionCooroutine = Move();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        else if (r < .8f)
+                        {
+                            currentActionCooroutine = Investigate();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        else
+                        {
+                            currentActionCooroutine = Idle();
+                            StartCoroutine(currentActionCooroutine);
+                        }
+                        break;
+                    }
+            }
+        }
+    }
+
+    protected IEnumerator ResetCanCheckAltar()
+    {
+        yield return new WaitForSeconds(20);
+        canCheckAltar = true;
     }
 
     protected IEnumerator Panic(Vector3 locationOffset)
@@ -217,16 +243,16 @@ public class Human : LivingThing
                 {
                     if (!Physics.Raycast(transform.position, -transform.forward, 4f, monsterAndObstacleBitmask))
                         dir = -transform.forward;
-                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(135, 0, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
-                        dir = Quaternion.Euler(135, 0, 0) * transform.forward;
-                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(-135, 0, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
-                        dir = Quaternion.Euler(-135, 0, 0) * transform.forward;
-                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(90, 0, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
-                        dir = Quaternion.Euler(90, 0, 0) * transform.forward;
-                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(-90, 0, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
-                        dir = Quaternion.Euler(-90, 0, 0) * transform.forward;
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(0, 135, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
+                        dir = Quaternion.Euler(0, 135, 0) * transform.forward;
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(0, -135, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
+                        dir = Quaternion.Euler(0, -135, 0) * transform.forward;
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(0, 90, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
+                        dir = Quaternion.Euler(0, 90, 0) * transform.forward;
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(0, -90, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
+                        dir = Quaternion.Euler(0, -90, 0) * transform.forward;
                     else
-                        dir = Quaternion.Euler(Random.Range(90, 270), 0, 0) * transform.forward;
+                        dir = Quaternion.Euler(0, Random.Range(90, 270), 0) * transform.forward;
                     //Debug.Log($"Panicing player turned from {transform.forward} to {dir}");
                 }
                 else
@@ -262,9 +288,9 @@ public class Human : LivingThing
                     float angle = Random.Range(35f, 145f);
                     if (Random.value < 0.5f)
                         angle = -angle;
-                    if (!Physics.Raycast(transform.position, Quaternion.Euler(angle, 0, 0) * transform.forward, 4f, obstacleBitmask))
+                    if (!Physics.Raycast(transform.position, Quaternion.Euler(0, angle, 0) * transform.forward, 4f, obstacleBitmask))
                     {
-                        dir = Quaternion.Euler(angle, 0, 0) * transform.forward;
+                        dir = Quaternion.Euler(0, angle, 0) * transform.forward;
                         break;
                     }
                 }
@@ -310,7 +336,8 @@ public class Human : LivingThing
                 continue;
             }
 
-            if (Physics.Raycast(transform.position, col.transform.position, 1 << LayerMask.NameToLayer("Default")))
+            // Don't include Interactible layer
+            if (Physics.Raycast(transform.position, col.transform.position, Vector3.Distance(transform.position, col.transform.position), 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Haunt")))
             {
                 colList.RemoveAt(index);
                 continue;
@@ -339,7 +366,24 @@ public class Human : LivingThing
             yield return new WaitForSeconds(4f);
             if (interactible != null)
             {
-                GetItem(interactible.FinishSearch(this));
+                if (interactible.GetItems().Length > 1)
+                    StartCoroutine(ForgetInteractible(interactible));
+                Item i = interactible.TakeItem(this);
+                if (MyItem != Item.None)
+                {
+                    if (MyItem < i)
+                    {
+                        DropItem();
+                    }
+                    else
+                    {
+                        Item myItemBackup = MyItem;
+                        GetItem(i);
+                        DropItem();
+                        i = myItemBackup;
+                    }
+                }
+                GetItem(i);
                 lastInvestigateSucceeded = true;
             }
         }
@@ -354,6 +398,30 @@ public class Human : LivingThing
         ChooseAction();
     }
 
+    protected IEnumerator CheckAltar()
+    {
+        lastAction = currentAction;
+        currentAction = Actions.Altar;
+        if (!Physics.Raycast(transform.position, altar.transform.position - transform.position, Vector3.Distance(altar.transform.position, transform.position), obstacleBitmask))
+        {
+            lastAction = Actions.Altar;
+            NavMeshAgent.speed = WalkSpeed;
+            NavMeshAgent.SetDestination(altar.appreciationPosition.position);
+            yield return new WaitUntil(() =>
+            {
+                return Vector3.Distance(transform.position, altar.appreciationPosition.position) < InteractDistance;
+            });
+
+            if (!altar.Appreciate(this))
+            {
+                TakeDamage(1);
+                yield return new WaitForSeconds(2);
+            }
+        }
+
+        ChooseAction();
+    }
+
     public override bool HurtBoxTrigger(Collider thing)
     {
         if (attackCooldown == 0)
@@ -362,6 +430,7 @@ public class Human : LivingThing
             if (other != null)
             {
                 other.TakeDamage(4);
+                attackCooldown = 1;
                 return true;
             }
         }
@@ -455,5 +524,11 @@ public class Human : LivingThing
                 StartCoroutine(currentActionCooroutine);
             }
         }
+    }
+
+    private IEnumerator ForgetInteractible(Interactible i)
+    {
+        yield return new WaitForSeconds(120);
+        investigatedInteractibles.Remove(i);
     }
 }

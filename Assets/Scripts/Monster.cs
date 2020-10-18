@@ -151,9 +151,9 @@ public class Monster : LivingThing
                     float angle = Random.Range(35f, 145f);
                     if (Random.value < 0.5f)
                         angle = -angle;
-                    if (!Physics.Raycast(transform.position, Quaternion.Euler(angle, 0, 0) * transform.forward, 4f, obstacleBitmask))
+                    if (!Physics.Raycast(transform.position, Quaternion.Euler(0, angle, 0) * transform.forward, 4f, obstacleBitmask))
                     {
-                        dir = Quaternion.Euler(angle, 0, 0) * transform.forward;
+                        dir = Quaternion.Euler(0, angle, 0) * transform.forward;
                         break;
                     }
                 }
@@ -161,7 +161,7 @@ public class Monster : LivingThing
             }
             else
             {
-                dir = Quaternion.Euler(Random.Range(-25f, 25f), 0, 0) * transform.forward;
+                dir = Quaternion.Euler(0, Random.Range(-25f, 25f), 0) * transform.forward;
             }
             NavMeshAgent.SetDestination(transform.position + dir * 4);
             yield return new WaitForSeconds(.5f);
@@ -234,8 +234,9 @@ public class Monster : LivingThing
             Human other = thing.GetComponentInParent<Human>();
             if (other != null)
             {
-                other.TakeDamage(4);
+                other.TakeDamage(2);
                 MakeNoise(50, SoundSource.Monster);
+                attackCooldown = 1;
                 return true;
             }
         }

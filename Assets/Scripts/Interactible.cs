@@ -5,10 +5,14 @@ using static Items;
 
 public class Interactible : MonoBehaviour
 {
-    [SerializeField]
-    private List<Item> items;
+    public List<Item> items;
 
-    public virtual Item FinishSearch(Human human)
+    public virtual Item[] GetItems()
+    {
+        return items.ToArray();
+    }
+
+    public virtual Item TakeItem(Human human)
     {
         if (items.Count > 0)
         {

@@ -95,6 +95,8 @@ public abstract class LivingThing : MonoBehaviour
                 if (humans.Length == 1)
                 {
                     Time.timeScale = 0;
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
                     GameObject.FindGameObjectWithTag("Play Panel").SetActive(false);
                     GameObject uiPanel = GameObject.FindGameObjectWithTag("UI Panel");
                     for (int i = 0; i < uiPanel.transform.childCount; i++)

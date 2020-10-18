@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Items;
 
 public class RandomManager : MonoBehaviour
 {
     public GameObject playerPrefab;
     public Transform playerSpawnpoint;
     public List<Sprite> humanSprites;
+    public List<Item> items;
 
     public const int HumansToSpawn = 6;
     // Start is called before the first frame update
@@ -27,6 +29,24 @@ public class RandomManager : MonoBehaviour
             SpriteRenderer sr = h.GetMainSpriteRenderer();
             if (sr != null)
                 sr.sprite = sprite;
+        }
+
+        List<GameObject> interactibleObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("Interactable"));
+        if (interactibleObjects.Count == 0)
+            throw new System.Exception("No interactibles in the level, game cannot be lost.");
+        else while (interactibleObjects.Count < items.Count)
+                interactibleObjects.AddRange(interactibleObjects);
+        for(int i = 0; i < items.Count; i++)
+        {
+            int index = Random.Range(0, interactibleObjects.Count);
+            Interactible interactible = interactibleObjects[index].GetComponent<Interactible>();
+            if (interactible != null && !(interactible is WorldItem))
+            {
+                if (interactible.items == null)
+                    interactible.items = new List<Item>();
+
+                interactible.items.Add(items[i]);
+            }
         }
 
         Destroy(gameObject);

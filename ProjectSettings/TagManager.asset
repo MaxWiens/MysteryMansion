@@ -12,6 +12,8 @@ TagManager:
   - Play Panel
   - Human
   - UI Panel
+  - Interactable
+  - Altar
   layers:
   - Default
   - TransparentFX

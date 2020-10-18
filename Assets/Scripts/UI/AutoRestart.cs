@@ -10,6 +10,8 @@ public class AutoRestart : MonoBehaviour
         if (InputManager.Input.Player.Interact.triggered)
         {
             Time.timeScale = 1;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             SceneManager.LoadSceneAsync("Scenes/MainMenu");
         }
     }

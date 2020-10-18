@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Items
 {
-    public enum Item { Key = 0, Axe, Remains, None }
+    public enum Item { Key = 0, Axe, Remains, HolyWater, None }
     private static Sprite[] sprites = new Sprite[Enum.GetValues(typeof(Item)).Length];
 
     private static string GetSpritePath(Item item)
@@ -18,8 +18,10 @@ public class Items
                 return "items/key";
             case Item.Axe:
                 return "items/axe";
-            /*case Item.Remains:
-                return "remains";*/
+            case Item.Remains:
+                return "items/skull";
+            case Item.HolyWater:
+                return "items/holywater";
             default:
                 throw new NotImplementedException();
         }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Restart : MonoBehaviour
+public class Play : MonoBehaviour
 {
     public void OnClick()
     {
         Time.timeScale = 1;
-        SceneManager.LoadSceneAsync("Scenes/MainMenu");
+        SceneManager.LoadSceneAsync("Scenes/MainGame");
     }
 }

@@ -53,6 +53,10 @@ MonoBehaviour:
   Energy: 0
   _hauntIndicatorRenderer: {fileID: 6410892619087548666}
   _hauntIndicatorTransform: {fileID: 9125020353996305266}
+  activeSprite: {fileID: 21300000, guid: 94370390ff3c19c44a859c7ea9708101, type: 3}
+  notEnoughEnergySprite: {fileID: 21300000, guid: 6fa51555a5b9f5e479c67d89b7f2b5f9,
+    type: 3}
+  costText: {fileID: 0}
 --- !u!54 &2397855959530781236
 Rigidbody:
   m_ObjectHideFlags: 0

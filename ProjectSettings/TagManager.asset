@@ -7,6 +7,11 @@ TagManager:
   - MainSprite
   - EscapeListener
   - PausePanel
+  - Win Overlay
+  - Lose Overlay
+  - Play Panel
+  - Human
+  - UI Panel
   layers:
   - Default
   - TransparentFX

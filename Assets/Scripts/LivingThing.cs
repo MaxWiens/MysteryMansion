@@ -69,7 +69,7 @@ public abstract class LivingThing : MonoBehaviour
     {
         Health -= damage;
         Debug.Log($"{this} took {damage} damage");
-        if (Health < 0)
+        if (Health <= 0)
         {
             RaycastHit raycast;
             Vector3 point;
@@ -90,6 +90,19 @@ public abstract class LivingThing : MonoBehaviour
             {
                 h.DropItem();
                 MakeNoise(80, SoundSource.HumanDeath);
+                GameObject[] humans = GameObject.FindGameObjectsWithTag("Human");
+                // Last human is dead
+                if (humans.Length == 1)
+                {
+                    Time.timeScale = 0;
+                    GameObject.FindGameObjectWithTag("Play Panel").SetActive(false);
+                    GameObject uiPanel = GameObject.FindGameObjectWithTag("UI Panel");
+                    for (int i = 0; i < uiPanel.transform.childCount; i++)
+                    {
+                        if (uiPanel.transform.GetChild(i).CompareTag("Win Overlay"))
+                            uiPanel.transform.GetChild(i).gameObject.SetActive(true);
+                    }
+                }
             }
             Destroy(gameObject);
         }

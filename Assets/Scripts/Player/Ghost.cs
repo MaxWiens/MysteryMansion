@@ -2,6 +2,7 @@ using UnityEngine;
 
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 public class Ghost : MonoBehaviour {
 	public float HauntRadius = 1;
@@ -15,6 +16,12 @@ public class Ghost : MonoBehaviour {
 	private SpriteRenderer _hauntIndicatorRenderer = null;
 	[SerializeField]
 	private Transform _hauntIndicatorTransform = null;
+	[SerializeField]
+	private Sprite activeSprite = null;
+	[SerializeField]
+	private Sprite notEnoughEnergySprite = null;
+	[SerializeField]
+	private TMP_Text costText;
 
 	private void Start() {
 		_hauntIndicatorRenderer.enabled = false;
@@ -37,7 +44,7 @@ public class Ghost : MonoBehaviour {
 		if(_hauntTarget != null){
 			if(_hauntTarget.IsTriggered)
 				_hauntTarget = null;
-			else if(Game.Input.Player.Interact.triggered && Energy >= _hauntTarget.EnergyCost)
+			else if(InputManager.Input.Player.Interact.triggered && Energy >= _hauntTarget.EnergyCost)
 			{
 				Energy -= _hauntTarget.EnergyCost;
 				StartCoroutine(_hauntTarget.HauntAction());
@@ -52,9 +59,16 @@ public class Ghost : MonoBehaviour {
 		if(h != null){
 			_hauntTarget = h;
 			_hauntIndicatorRenderer.enabled = true;
+			if (Energy >= _hauntTarget.EnergyCost)
+				_hauntIndicatorRenderer.sprite = activeSprite;
+			else
+				_hauntIndicatorRenderer.sprite = notEnoughEnergySprite;
+			costText.alpha = 1;
+			costText.text = $"(-{_hauntTarget.EnergyCost})";
 			_hauntIndicatorTransform.position = _hauntTarget.HauntIndicatorLocation.position;
 		}else{
 			_hauntIndicatorRenderer.enabled = false;
+			costText.alpha = 0;
 			_hauntTarget = null;
 		}
 	}

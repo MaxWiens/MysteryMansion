@@ -23,7 +23,7 @@ public class CameraFollow : MonoBehaviour {
 	}
 
 	void Update() {
-		Vector2 camMovement = Game.Input.Player.Look.ReadValue<Vector2>() * LookSpeed;
+		Vector2 camMovement = InputManager.Input.Player.Look.ReadValue<Vector2>() * LookSpeed;
 		_rotation.y += camMovement.x;
 		_rotation.x += -camMovement.y;
 		_rotation.x = Mathf.Clamp(_rotation.x, -_vertLookLimit_min, _vertLookLimit_max);

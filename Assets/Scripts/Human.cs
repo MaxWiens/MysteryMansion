@@ -27,6 +27,7 @@ public class Human : LivingThing
     private List<Interactible> investigatedInteractibles;
     private bool lastInvestigateSucceeded;
     private float attackCooldown;
+    private int maxHealth;
 
     const float WalkSpeed = 2f;
     const float PanicSpeed = 2.35f;
@@ -35,10 +36,17 @@ public class Human : LivingThing
     const float FindInteractableDistance = 7.5f;
     const float MaxTerror = 30f;
 
+    private static int obstacleBitmask;
+    private static int monsterAndObstacleBitmask;
+
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
+
+        obstacleBitmask = 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Interactible") | 1 << LayerMask.NameToLayer("Haunt");
+        monsterAndObstacleBitmask = obstacleBitmask | 1 << LayerMask.NameToLayer("Monster");
+
         MyItem = Item.None;
         Terror = 0;
         PanicThreshhold = Random.Range(20, 25);
@@ -49,7 +57,9 @@ public class Human : LivingThing
         NavMeshAgent.Warp(transform.position);
         currentAction = Actions.Idle;
         NoiseHeard += Human_NoiseHeard;
+        maxHealth = Health;
         ChooseAction();
+        StartCoroutine(Heal());
     }
 
     // Update is called once per frame
@@ -84,6 +94,13 @@ public class Human : LivingThing
         }
 
         attackCooldown = Mathf.Max(0f, attackCooldown - Time.deltaTime);
+    }
+
+    private IEnumerator Heal()
+    {
+        if (Health < maxHealth)
+            Health += 1;
+        yield return new WaitForSeconds(5);
     }
 
     protected void ChooseAction()
@@ -196,21 +213,21 @@ public class Human : LivingThing
             {
                 timeElapsed -= 1f;
                 Vector3 dir;
-                if (Physics.Raycast(transform.position, transform.forward, 2f, 1 << LayerMask.NameToLayer("Default")))
+                if (Physics.Raycast(transform.position, transform.forward, 2f, obstacleBitmask))
                 {
-                    if (!Physics.Raycast(transform.position, -transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                    if (!Physics.Raycast(transform.position, -transform.forward, 4f, monsterAndObstacleBitmask))
                         dir = -transform.forward;
-                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(135, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(135, 0, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
                         dir = Quaternion.Euler(135, 0, 0) * transform.forward;
-                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(-135, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(-135, 0, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
                         dir = Quaternion.Euler(-135, 0, 0) * transform.forward;
-                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(90, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(90, 0, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
                         dir = Quaternion.Euler(90, 0, 0) * transform.forward;
-                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(-90, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(-90, 0, 0) * transform.forward, 4f, monsterAndObstacleBitmask))
                         dir = Quaternion.Euler(-90, 0, 0) * transform.forward;
                     else
                         dir = Quaternion.Euler(Random.Range(90, 270), 0, 0) * transform.forward;
-                    Debug.Log($"Panicing player turned from {transform.forward} to {dir}");
+                    //Debug.Log($"Panicing player turned from {transform.forward} to {dir}");
                 }
                 else
                 {
@@ -237,7 +254,7 @@ public class Human : LivingThing
         yield return new WaitForSeconds(.5f);
         for (int i = 0; i < 5; i++)
         {
-            if (Physics.Raycast(transform.position, transform.forward, 2f, 1 << LayerMask.NameToLayer("Default")))
+            if (Physics.Raycast(transform.position, transform.forward, 2f, obstacleBitmask))
             {
                 dir = -transform.forward;
                 for (int n = 0; n < 20; n++)
@@ -245,13 +262,13 @@ public class Human : LivingThing
                     float angle = Random.Range(35f, 145f);
                     if (Random.value < 0.5f)
                         angle = -angle;
-                    if (!Physics.Raycast(transform.position, Quaternion.Euler(angle, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default")))
+                    if (!Physics.Raycast(transform.position, Quaternion.Euler(angle, 0, 0) * transform.forward, 4f, obstacleBitmask))
                     {
                         dir = Quaternion.Euler(angle, 0, 0) * transform.forward;
                         break;
                     }
                 }
-                Debug.Log($"Walking player turned from {transform.forward} to {dir}");
+                //Debug.Log($"Walking player turned from {transform.forward} to {dir}");
             }
             else
             {

@@ -6,7 +6,7 @@ public class PlayerMove : MonoBehaviour {
   private Rigidbody _rigidBody = null;
 
   private void Update() {
-    Vector2 v = Game.Input.Player.Move.ReadValue<Vector2>();
+    Vector2 v = InputManager.Input.Player.Move.ReadValue<Vector2>();
     if(v.x != 0 || v.y != 0){
       Vector3 camForward = Camera.main.transform.forward;
       camForward.y = 0;

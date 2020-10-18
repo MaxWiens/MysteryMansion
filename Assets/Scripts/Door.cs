@@ -19,8 +19,7 @@ public class Door : MonoBehaviour
     private Quaternion closedRotation;
     [SerializeField]
     private bool open = false;
-    [SerializeField]
-    private bool locked = false;
+    public bool locked = false;
 
     private OffMeshLink offMeshLink;
     private IEnumerator openCoroutine;

@@ -20,9 +20,14 @@ public class Monster : LivingThing
     const float WalkSpeed = 1.5f;
     const float ChaseSpeed = 1.75f;
 
+    private static int obstacleBitmask;
+
     protected override void Start()
     {
         base.Start();
+
+        obstacleBitmask = 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Interactible") | 1 << LayerMask.NameToLayer("Haunt");
+
         Health = 20;
         NoiseHeard += Monster_OnNoiseHeard;
         NavMeshAgent.Warp(transform.position);
@@ -138,7 +143,7 @@ public class Monster : LivingThing
         yield return new WaitForSeconds(.5f);
         for (int i = 0; i < 5; i++)
         {
-            if (Physics.Raycast(transform.position, transform.forward, 2f, 1 << LayerMask.NameToLayer("Default")))
+            if (Physics.Raycast(transform.position, transform.forward, 2f, obstacleBitmask))
             {
                 dir = -transform.forward;
                 for (int n = 0; n < 20; n++)
@@ -146,13 +151,13 @@ public class Monster : LivingThing
                     float angle = Random.Range(35f, 145f);
                     if (Random.value < 0.5f)
                         angle = -angle;
-                    if (!Physics.Raycast(transform.position, Quaternion.Euler(angle, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default")))
+                    if (!Physics.Raycast(transform.position, Quaternion.Euler(angle, 0, 0) * transform.forward, 4f, obstacleBitmask))
                     {
                         dir = Quaternion.Euler(angle, 0, 0) * transform.forward;
                         break;
                     }
                 }
-                Debug.Log($"Walking monster turned from {transform.forward} to {dir}");
+                //Debug.Log($"Walking monster turned from {transform.forward} to {dir}");
             }
             else
             {

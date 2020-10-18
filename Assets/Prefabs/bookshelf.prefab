@@ -159,8 +159,7 @@ MonoBehaviour:
   HauntIndicatorLocation: {fileID: 8116408463023054218}
   IsTriggered: 0
   EnergyCost: 1
-  _bookshelfCollider: {fileID: 4111335766395822916, guid: 525be6e73e57e734ca2039a6f76b5d70,
-    type: 3}
+  _bookshelfCollider: {fileID: 2487415872764216525}
 --- !u!65 &2487415872764216525
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -169,7 +168,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5474200525871062003}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 4.07, y: 5.5, z: 1.69}

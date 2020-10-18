@@ -25,7 +25,7 @@ public class EscapeListener : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Game.Input.Player.Menu.triggered && pauseOverlay != null)
+        if (InputManager.Input.Player.Menu.triggered && pauseOverlay != null && GameObject.FindGameObjectWithTag("Win Overlay") == null && GameObject.FindGameObjectWithTag("Lose Overlay") == null)
         {
             if (!paused)
             {

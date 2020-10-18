@@ -3895,6 +3895,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9f6c58f5681e20146b592e9252afdc8b, type: 3}
   - {fileID: 21300000, guid: ad437bee82952d94885c32528f52688a, type: 3}
   - {fileID: 21300000, guid: 6752b7d4fc2fb74408e273f330f74452, type: 3}
+  - {fileID: 21300000, guid: 94bd5e6b30a18bb40a50db8a4279db6c, type: 3}
   items: 0200000003000000000000000000000001000000
 --- !u!4 &1413172260 stripped
 Transform:

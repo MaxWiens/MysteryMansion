@@ -9,12 +9,6 @@ public class EscapeListener : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (GameObject.FindGameObjectWithTag("EscapeListener").GetComponent<EscapeListener>() != this)
-        {
-            Destroy(this);
-            return;
-        }
-        DontDestroyOnLoad(this);
         pauseOverlay.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

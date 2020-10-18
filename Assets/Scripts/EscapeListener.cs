@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EscapeListener : MonoBehaviour
 {
-    private bool paused;
     [SerializeField]
     private GameObject pauseOverlay;
     // Start is called before the first frame update
@@ -16,7 +15,6 @@ public class EscapeListener : MonoBehaviour
             return;
         }
         DontDestroyOnLoad(this);
-        paused = false;
         pauseOverlay.SetActive(false);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -27,7 +25,7 @@ public class EscapeListener : MonoBehaviour
     {
         if (InputManager.Input.Player.Menu.triggered && pauseOverlay != null && GameObject.FindGameObjectWithTag("Win Overlay") == null && GameObject.FindGameObjectWithTag("Lose Overlay") == null)
         {
-            if (!paused)
+            if (!pauseOverlay.activeSelf)
             {
                 Time.timeScale = 0;
                 Cursor.visible = true;
@@ -41,7 +39,6 @@ public class EscapeListener : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 pauseOverlay.SetActive(false);
             }
-            paused = !paused;
         }
     }
 }

@@ -12,7 +12,7 @@ public class WorldItem : Interactible
         set {
             _item = value;
             if (renderer == null)
-                renderer = GetComponent<SpriteRenderer>();
+                renderer = GetComponentInChildren<SpriteRenderer>();
             if (renderer != null)
                 renderer.sprite = GetSprite(_item);
         }
@@ -22,7 +22,7 @@ public class WorldItem : Interactible
     void Start()
     {
         if (renderer == null)
-            renderer = GetComponent<SpriteRenderer>();
+            renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     public override Item TakeItem(Human human)

@@ -73,6 +73,12 @@ public abstract class LivingThing : MonoBehaviour
         _oofSound.Play();
         Health -= damage;
         Debug.Log($"{this} took {damage} damage");
+
+        if (damage > 0 && this is Human)
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Ghost>().AddEnergy(damage);
+        }
+
         if (Health <= 0)
         {
             RaycastHit raycast;

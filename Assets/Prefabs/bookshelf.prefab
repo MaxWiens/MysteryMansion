@@ -159,7 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HauntIndicatorLocation: {fileID: 8116408463023054218}
   IsTriggered: 0
-  EnergyCost: 1
+  EnergyCost: 5
   _sound: {fileID: 5958491853229849657}
   _bookshelfCollider: {fileID: 2487415872764216525}
 --- !u!65 &2487415872764216525

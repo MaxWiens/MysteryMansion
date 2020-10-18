@@ -7,8 +7,7 @@ using TMPro;
 public class Ghost : MonoBehaviour {
 	public float HauntRadius = 1;
 
-	public int Energy = 0;
-	private float _energyTimer = 0f;
+	public int Energy { get; private set; }
 	public float SpookCooldown { get; private set; }
 
 	private Haunt _hauntTarget = null;
@@ -28,12 +27,13 @@ public class Ghost : MonoBehaviour {
 	[SerializeField]
 	private TriggerColliderScript spookCollider;
 
-	public const float MaxSpookCooldown = 4;
-	public const int MaxEnergy = 10;
+	public const float MaxSpookCooldown = 5;
+	public const int MaxEnergy = 40;
 
 	private void Start() {
 		_hauntIndicatorRenderer.enabled = false;
 		SpookCooldown = 0;
+		Energy = 0;
 	}
 
 	private void Update() {
@@ -49,12 +49,9 @@ public class Ghost : MonoBehaviour {
 				if (human != null)
 				{
 					human.Spook();
-					Energy += 1;
+					AddEnergy(1);
 				}
 			}
-
-			if (Energy > MaxEnergy)
-				Energy = MaxEnergy;
 		}
 
 		Collider[] colliders = Physics.OverlapSphere(transform.position, HauntRadius, (1 << LayerMask.NameToLayer("Interactible")) | (1 << LayerMask.NameToLayer("Haunt")));
@@ -89,5 +86,12 @@ public class Ghost : MonoBehaviour {
 			costText.alpha = 0;
 			_hauntTarget = null;
 		}
+	}
+
+	public void AddEnergy(int energy)
+	{
+		Energy += energy;
+		if (Energy > MaxEnergy)
+			Energy = MaxEnergy;
 	}
 }

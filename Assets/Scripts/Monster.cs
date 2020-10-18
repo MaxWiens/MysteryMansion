@@ -10,6 +10,7 @@ public class Monster : LivingThing
 
     protected Actions currentAction;
     private IEnumerator currentActionCooroutine;
+    private float attackCooldown;
 
     public TriggerColliderScript farColl;
     public TriggerColliderScript medColl;
@@ -31,27 +32,54 @@ public class Monster : LivingThing
     protected override void Update()
     {
         base.Update();
+        bool done = false;
         if (nearColl.CollidersHit > 0)
         {
-            if (currentActionCooroutine != null)
-                StopCoroutine(currentActionCooroutine);
-            currentActionCooroutine = Chase(nearColl[0].transform.parent.position);
-            StartCoroutine(currentActionCooroutine);
+            for (int i = 0; i < nearColl.CollidersHit; i++)
+            {
+                if (nearColl[i] != null)
+                {
+                    done = true;
+                    if (currentActionCooroutine != null)
+                        StopCoroutine(currentActionCooroutine);
+                    currentActionCooroutine = Chase(nearColl[0].transform.parent.position);
+                    StartCoroutine(currentActionCooroutine);
+                    break;
+                }
+            }
         }
-        else if (medColl.CollidersHit > 0)
+        if (!done && medColl.CollidersHit > 0)
         {
-            if (currentActionCooroutine != null)
-                StopCoroutine(currentActionCooroutine);
-            currentActionCooroutine = Chase(medColl[0].transform.parent.position);
-            StartCoroutine(currentActionCooroutine);
+            for (int i = 0; i < medColl.CollidersHit; i++)
+            {
+                if (medColl[i] != null)
+                {
+                    done = true;
+                    if (currentActionCooroutine != null)
+                        StopCoroutine(currentActionCooroutine);
+                    currentActionCooroutine = Chase(medColl[0].transform.parent.position);
+                    StartCoroutine(currentActionCooroutine);
+                    break;
+                }
+            }
         }
-        else if (farColl.CollidersHit > 0)
+        if (!done && farColl.CollidersHit > 0)
         {
-            if (currentActionCooroutine != null)
-                StopCoroutine(currentActionCooroutine);
-            currentActionCooroutine = Chase(farColl[0].transform.parent.position);
-            StartCoroutine(currentActionCooroutine);
+            for (int i = 0; i < medColl.CollidersHit; i++)
+            {
+                if (medColl[i] != null)
+                {
+                    done = true;
+                    if (currentActionCooroutine != null)
+                        StopCoroutine(currentActionCooroutine);
+                    currentActionCooroutine = Chase(medColl[0].transform.parent.position);
+                    StartCoroutine(currentActionCooroutine);
+                    break;
+                }
+            }
         }
+
+        attackCooldown = Mathf.Max(0f, attackCooldown - Time.deltaTime);
     }
 
     protected void ChooseAction()
@@ -188,6 +216,27 @@ public class Monster : LivingThing
         {
             return Vector3.Distance(transform.position, location) < 0.5f;
         });
+        ChooseAction();
+    }
+
+    public override bool HurtBoxTrigger(Collider thing)
+    {
+        if (attackCooldown == 0)
+        {
+            Human other = thing.GetComponentInParent<Human>();
+            if (other != null)
+            {
+                other.TakeDamage(4);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public override void HandleDoorBlocked()
+    {
+        transform.forward = Quaternion.Euler(Random.Range(90, 270), 0, 0) * transform.forward;
         ChooseAction();
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System;
 
-public class LivingThing : MonoBehaviour
+public abstract class LivingThing : MonoBehaviour
 {
     private NavMeshAgent _navMeshAgent;
     protected NavMeshAgent NavMeshAgent
@@ -27,6 +27,7 @@ public class LivingThing : MonoBehaviour
     public delegate void NoiseHeardEventHandler(LivingThing sender, NoiseEventArgs args);
     protected event NoiseHeardEventHandler NoiseHeard;
     private bool manuallyTraversingOffMeshLink;
+    public GameObject corpsePrefab;
 
     public virtual void TriggerNoiseHeard(LivingThing sender, NoiseEventArgs a)
     {
@@ -67,18 +68,23 @@ public class LivingThing : MonoBehaviour
     public void TakeDamage(int damage)
     {
         Health -= damage;
+        Debug.Log($"{this} took {damage} damage");
         if (Health < 0)
         {
-            //die
+            SpriteRenderer corpseRenderer = Instantiate(corpsePrefab, transform.position, Quaternion.Euler(0, 0, 90)).GetComponent<SpriteRenderer>();
+            SpriteRenderer myRenderer = GetMainSpriteRenderer();
+            corpseRenderer.sprite = myRenderer.sprite;
+            if (this is Human h)
+                h.DropItem();
+            Destroy(gameObject);
         }
     }
-
-    private float offMeshProgress;
 
     protected virtual void Start()
     {
         NavMeshAgent = GetComponent<NavMeshAgent>();
         manuallyTraversingOffMeshLink = false;
+        Health = 10;
     }
 
     protected virtual void Update()
@@ -95,12 +101,21 @@ public class LivingThing : MonoBehaviour
 
             if (door != null)
             {
-                IEnumerator<bool> doorOpen = door.Open(transform.position, this).GetEnumerator();
-                StartCoroutine(UseDoor(offMeshLink.startTransform.position, doorOpen));
+                if (door.CanOpen(this))
+                {
+                    IEnumerator<bool> doorOpen = door.Open(transform.position, this).GetEnumerator();
+                    StartCoroutine(UseDoor(endPosition, doorOpen));
+                }
+                else
+                {
+                    manuallyTraversingOffMeshLink = false;
+                    NavMeshAgent.Warp(transform.position);
+                    HandleDoorBlocked();
+                }
             }
             else
             {
-                StartCoroutine(UseOffMeshLink(offMeshLink.endTransform.position));
+                StartCoroutine(UseOffMeshLink(endPosition));
             }
         }
     }
@@ -153,5 +168,20 @@ public class LivingThing : MonoBehaviour
             yield return null;
         }
         manuallyTraversingOffMeshLink = false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="thing"></param>
+    /// <returns>true if the attack went through and to rest the timer, false otherwise</returns>
+    public abstract bool HurtBoxTrigger(Collider thing);
+
+    public abstract void HandleDoorBlocked();
+
+    public virtual SpriteRenderer GetMainSpriteRenderer()
+    {
+        SpriteRenderer renderer = GetComponentInChildren<SpriteRenderer>();
+        return renderer;
     }
 }

@@ -32,19 +32,19 @@ public class Door : MonoBehaviour
         offMeshLink = GetComponent<OffMeshLink>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool CanOpen(LivingThing thing)
     {
-        
-    }
-
-    public bool CanOpen(Human h)
-    {
-        return !locked;
+        return !locked || (thing is Human h && h.MyItem == Items.Item.Key);
     }
 
     public IEnumerable<bool> Open(Vector3 userPosition, LivingThing user)
     {
+        if (locked && user is Human h && h.MyItem == Items.Item.Key)
+        {
+            h.RemoveItem();
+            locked = false;
+        }
+
         if (!open && !opening)
         {
             if (openCoroutine != null)

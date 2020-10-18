@@ -8,7 +8,7 @@ public class Interactible : MonoBehaviour
     [SerializeField]
     private List<Item> items;
 
-    public virtual Item FinishSearch()
+    public virtual Item FinishSearch(Human human)
     {
         if (items.Count > 0)
         {

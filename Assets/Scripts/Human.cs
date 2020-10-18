@@ -12,6 +12,7 @@ public class Human : LivingThing
     public float Terror { get; protected set; }
     public float TerrorDrain { get; protected set; }
     public float PanicThreshhold { get; protected set; }
+    public Item MyItem { get; private set; }
 
     public Transform debugTarget;
     public TriggerColliderScript farColl;
@@ -19,28 +20,30 @@ public class Human : LivingThing
     public TriggerColliderScript nearColl;
     public GameObject worldItemPrefab;
     public SpriteRenderer heldItemRenderer;
+    public GameObject hurtbox;
 
     protected Actions currentAction;
     private IEnumerator currentActionCooroutine;
     private List<Interactible> investigatedInteractibles;
     private bool lastInvestigateSucceeded;
-    private Item myItem;
+    private float attackCooldown;
 
     const float WalkSpeed = 4f;
     const float PanicSpeed = 4.7f;
     // keep bigger than the player's radius
     const float InteractDistance = 1f;
     const float FindInteractableDistance = 15f;
-    const float MaxTerror = 35f;
+    const float MaxTerror = 30f;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
-        myItem = Item.None;
+        MyItem = Item.None;
         Terror = 0;
-        PanicThreshhold = Random.Range(15, 20);
+        PanicThreshhold = Random.Range(20, 25);
         TerrorDrain = 0.5f;
+        attackCooldown = 0f;
         lastInvestigateSucceeded = false;
         investigatedInteractibles = new List<Interactible>();
         NavMeshAgent.Warp(transform.position);
@@ -52,7 +55,8 @@ public class Human : LivingThing
     protected override void Update()
     {
         base.Update();
-        Terror = Mathf.Max(0f, Terror - TerrorDrain);
+        Terror = Terror - TerrorDrain * Time.deltaTime * (currentAction == Actions.Panic ? 3 : 1);
+
 
         if (farColl.Triggered)
         {
@@ -69,7 +73,7 @@ public class Human : LivingThing
             Terror += 3;
         }
 
-        Terror = Mathf.Min(Terror, MaxTerror);
+        Terror = Mathf.Clamp(Terror, 0f, MaxTerror);
 
         if (currentAction != Actions.Panic && Terror > PanicThreshhold && Random.Range(0f, 1f) > .9f)
         {
@@ -77,6 +81,8 @@ public class Human : LivingThing
             currentActionCooroutine = Panic(transform.forward * 10);
             StartCoroutine(currentActionCooroutine);
         }
+
+        attackCooldown = Mathf.Max(0f, attackCooldown - Time.deltaTime);
     }
 
     protected void ChooseAction()
@@ -175,37 +181,43 @@ public class Human : LivingThing
         NavMeshAgent.speed = PanicSpeed;
         NavMeshAgent.SetDestination(transform.position - locationOffset);
 
-        if (myItem != Item.None && Random.value < .33f)
+        if (MyItem != Item.None && Random.value < .33f)
         {
             DropItem();
         }
 
-        yield return new WaitForSeconds(1f);
-        for (int i = 0; i < 2; i++)
+        float timeElapsed = 0f;
+        yield return null;
+        while (Terror > MaxTerror / 2)
         {
-            Vector3 dir;
-            if (Physics.Raycast(transform.position, transform.forward, 2f, 1 << LayerMask.NameToLayer("Default")))
+            timeElapsed += Time.deltaTime;
+            if (timeElapsed >= 1f)
             {
-                if (!Physics.Raycast(transform.position, -transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
-                    dir = -transform.forward;
-                else if (!Physics.Raycast(transform.position, Quaternion.Euler(135, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
-                    dir = Quaternion.Euler(135, 0, 0) * transform.forward;
-                else if (!Physics.Raycast(transform.position, Quaternion.Euler(-135, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
-                    dir = Quaternion.Euler(-135, 0, 0) * transform.forward;
-                else if (!Physics.Raycast(transform.position, Quaternion.Euler(90, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
-                    dir = Quaternion.Euler(90, 0, 0) * transform.forward;
-                else if (!Physics.Raycast(transform.position, Quaternion.Euler(-90, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
-                    dir = Quaternion.Euler(-90, 0, 0) * transform.forward;
+                timeElapsed -= 1f;
+                Vector3 dir;
+                if (Physics.Raycast(transform.position, transform.forward, 2f, 1 << LayerMask.NameToLayer("Default")))
+                {
+                    if (!Physics.Raycast(transform.position, -transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                        dir = -transform.forward;
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(135, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                        dir = Quaternion.Euler(135, 0, 0) * transform.forward;
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(-135, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                        dir = Quaternion.Euler(-135, 0, 0) * transform.forward;
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(90, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                        dir = Quaternion.Euler(90, 0, 0) * transform.forward;
+                    else if (!Physics.Raycast(transform.position, Quaternion.Euler(-90, 0, 0) * transform.forward, 4f, 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Monster")))
+                        dir = Quaternion.Euler(-90, 0, 0) * transform.forward;
+                    else
+                        dir = Quaternion.Euler(Random.Range(90, 270), 0, 0) * transform.forward;
+                    Debug.Log($"Panicing player turned from {transform.forward} to {dir}");
+                }
                 else
-                    dir = Quaternion.Euler(Random.Range(90, 270), 0, 0) * transform.forward;
-                Debug.Log($"Panicing player turned from {transform.forward} to {dir}");
+                {
+                    dir = transform.forward;
+                }
+                NavMeshAgent.SetDestination(transform.position + dir * 10);
             }
-            else
-            {
-                dir = transform.forward;
-            }
-            NavMeshAgent.SetDestination(transform.position + dir * 10);
-            yield return new WaitForSeconds(1f);
+            yield return null;
         }
         ChooseAction();
     }
@@ -307,8 +319,11 @@ public class Human : LivingThing
             NavMeshAgent.speed = 0f;
             MakeNoise(60, SoundSource.Human);
             yield return new WaitForSeconds(4f);
-            GetItem(interactible.FinishSearch());
-            lastInvestigateSucceeded = true;
+            if (interactible != null)
+            {
+                GetItem(interactible.FinishSearch(this));
+                lastInvestigateSucceeded = true;
+            }
         }
         ChooseAction();
     }
@@ -321,6 +336,21 @@ public class Human : LivingThing
         ChooseAction();
     }
 
+    public override bool HurtBoxTrigger(Collider thing)
+    {
+        if (attackCooldown == 0)
+        {
+            Monster other = thing.GetComponentInParent<Monster>();
+            if (other != null)
+            {
+                other.TakeDamage(4);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void OnDrawGizmos()
     {
         Handles.Label(transform.position + Vector3.up, currentAction.ToString());
@@ -329,6 +359,8 @@ public class Human : LivingThing
 
     public void DropItem()
     {
+        if (MyItem == Item.None)
+            return;
         RaycastHit raycast;
         Vector3 point;
         if (Physics.Raycast(transform.position, Vector3.down, out raycast, 10f, 1 << LayerMask.NameToLayer("Default")))
@@ -340,7 +372,7 @@ public class Human : LivingThing
             point = transform.position;
         }
         WorldItem worldItem = Instantiate(worldItemPrefab, point, transform.rotation).GetComponent<WorldItem>();
-        worldItem.Item = myItem;
+        worldItem.Item = MyItem;
         RemoveItem();
     }
 
@@ -348,13 +380,46 @@ public class Human : LivingThing
     {
         if (item == Item.None)
             return;
-        myItem = item;
+        MyItem = item;
         heldItemRenderer.sprite = GetSprite(item);
+        if (item == Item.Axe)
+            hurtbox.SetActive(true);
     }
 
     public void RemoveItem()
     {
-        myItem = Item.None;
+        MyItem = Item.None;
         heldItemRenderer.sprite = null;
+        hurtbox.SetActive(false);
+    }
+
+    public override SpriteRenderer GetMainSpriteRenderer()
+    {
+        SpriteRenderer[] srs = GetComponentsInChildren<SpriteRenderer>();
+        foreach (SpriteRenderer sr in srs)
+        {
+            if (sr.CompareTag("MainSprite"))
+            {
+                return sr;
+            }
+        }
+
+        return null;
+    }
+
+    public override void HandleDoorBlocked()
+    {
+        transform.forward = Quaternion.Euler(Random.Range(90, 270), 0, 0) * transform.forward;
+        if (currentAction == Actions.Panic)
+        {
+            Terror += 5f;
+            StopCoroutine(currentActionCooroutine);
+            currentActionCooroutine = Panic(transform.forward * 10);
+            StartCoroutine(currentActionCooroutine);
+        }
+        else
+        {
+            ChooseAction();
+        }
     }
 }

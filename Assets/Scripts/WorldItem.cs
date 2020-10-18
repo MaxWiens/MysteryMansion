@@ -25,7 +25,7 @@ public class WorldItem : Interactible
             renderer = GetComponent<SpriteRenderer>();
     }
 
-    public override Item FinishSearch()
+    public override Item FinishSearch(Human human)
     {
         Destroy(gameObject);
         return _item;

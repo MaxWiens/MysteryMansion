@@ -12,7 +12,9 @@ public class Ghost : MonoBehaviour {
 	private float spookCooldown;
 
 	private Haunt _hauntTarget = null;
-	
+	[SerializeField]
+	private AudioSource _spookSound;
+
 	[SerializeField]
 	private SpriteRenderer _hauntIndicatorRenderer = null;
 	[SerializeField]
@@ -48,6 +50,7 @@ public class Ghost : MonoBehaviour {
 		spookCooldown = Mathf.Clamp(spookCooldown - Time.deltaTime, 0, MaxSpookCooldown);
 		if (spookCooldown == 0 && InputManager.Input.Player.Spook.triggered)
 		{
+			_spookSound.Play();
 			spookCooldown = MaxSpookCooldown;
 			for (int i = 0; i < spookCollider.CollidersHit; i++)
 			{

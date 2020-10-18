@@ -14,6 +14,7 @@ TagManager:
   - UI Panel
   - Interactable
   - Altar
+  - Monster
   layers:
   - Default
   - TransparentFX

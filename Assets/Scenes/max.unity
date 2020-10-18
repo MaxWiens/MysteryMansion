@@ -839,11 +839,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: DiningRoom
       objectReference: {fileID: 0}
-    - target: {fileID: 2584254393793582730, guid: aa306ff45d3b4674299ff925d5cc58e8,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2924750413376736304, guid: aa306ff45d3b4674299ff925d5cc58e8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1050,6 +1045,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Library
+      objectReference: {fileID: 0}
+    - target: {fileID: 3491438006469704017, guid: ecf7c13cf50bc964ba4cbdbab575c70b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4269347518793180139, guid: ecf7c13cf50bc964ba4cbdbab575c70b,
         type: 3}

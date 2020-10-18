@@ -6,6 +6,9 @@ using System;
 
 public abstract class LivingThing : MonoBehaviour
 {
+    [SerializeField]
+    private AudioSource _oofSound;
+
     private NavMeshAgent _navMeshAgent;
     protected NavMeshAgent NavMeshAgent
     {
@@ -67,6 +70,7 @@ public abstract class LivingThing : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        _oofSound.Play();
         Health -= damage;
         Debug.Log($"{this} took {damage} damage");
         if (Health <= 0)

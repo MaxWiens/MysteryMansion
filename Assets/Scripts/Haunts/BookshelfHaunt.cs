@@ -3,7 +3,8 @@ using System.Collections;
 
 public class BookshelfHaunt : Haunt
 {
-
+    [SerializeField]
+    private AudioSource _sound;
     private const float _TIME_TO_FALL = 0.5F;
     [SerializeField]
     private Collider _bookshelfCollider = null;
@@ -26,6 +27,7 @@ public class BookshelfHaunt : Haunt
             yield return null;
         }
         transform.rotation = end;
+        _sound.Play();
 
         yield return new WaitForSeconds(1.5f);
 

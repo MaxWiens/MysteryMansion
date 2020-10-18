@@ -32,7 +32,7 @@ public class Human : LivingThing
     const float PanicSpeed = 4.7f;
     // keep bigger than the player's radius
     const float InteractDistance = 1f;
-    const float FindInteractableDistance = 15f;
+    const float FindInteractableDistance = 7.5f;
     const float MaxTerror = 30f;
 
     // Start is called before the first frame update

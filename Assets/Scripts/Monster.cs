@@ -23,6 +23,7 @@ public class Monster : LivingThing
     protected override void Start()
     {
         base.Start();
+        Health = 20;
         NoiseHeard += Monster_OnNoiseHeard;
         NavMeshAgent.Warp(transform.position);
         currentAction = Actions.Idle;

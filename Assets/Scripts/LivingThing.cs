@@ -53,7 +53,7 @@ public abstract class LivingThing : MonoBehaviour
         }
     }
 
-    public int Health { get; private set; }
+    public int Health { get; protected set; }
     // Percentage from 1 to 0
     private float _noiseSensitivity = 1;
     public float NoiseSensitivity {

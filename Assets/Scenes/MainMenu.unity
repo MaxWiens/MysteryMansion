@@ -726,7 +726,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Move: WASD\t\tHaunt Object: E\nSpook: Left click/Left shift"
+  m_text: "Move: WASD\t\t\tHaunt Object: E\nSpook: Left click/Left shift\tPause:
+    Escape"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1434,8 +1435,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: You are a ghost haunting a mansion that some noisy kids have broken into.
-    Use your phantasmal powers to dispose of the intruders, lest they find your single
-    weakness.
+    Use your phantasmal powers to dispose of the intruders, lest they find your weakness.
+    Scare or injure them to gain ghostly energy.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

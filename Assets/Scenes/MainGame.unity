@@ -3757,11 +3757,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: InGameUI
       objectReference: {fileID: 0}
-    - target: {fileID: 7470579719072137690, guid: 5a4142b04536dab4e9d11a030e74f345,
-        type: 3}
-      propertyPath: m_TagString
-      value: UI Panel
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a4142b04536dab4e9d11a030e74f345, type: 3}
 --- !u!1001 &1505916316
@@ -3984,10 +3979,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1832685840, guid: 9a657c22a2296ce45a5b3b9e37ba0c71, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: 2673171157063506994, guid: 9a657c22a2296ce45a5b3b9e37ba0c71,
         type: 3}
       propertyPath: m_LocalPosition.x

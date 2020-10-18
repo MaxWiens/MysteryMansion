@@ -9,7 +9,7 @@ public class Ghost : MonoBehaviour {
 
 	public int Energy = 0;
 	private float _energyTimer = 0f;
-	private float spookCooldown;
+	public float SpookCooldown { get; private set; }
 
 	private Haunt _hauntTarget = null;
 	[SerializeField]
@@ -28,27 +28,18 @@ public class Ghost : MonoBehaviour {
 	[SerializeField]
 	private TriggerColliderScript spookCollider;
 
-	private const float MaxSpookCooldown = 4;
-	const int MaxEnergy = 10;
+	public const float MaxSpookCooldown = 4;
+	public const int MaxEnergy = 10;
 
 	private void Start() {
 		_hauntIndicatorRenderer.enabled = false;
-		spookCooldown = 0;
+		SpookCooldown = 0;
 	}
 
 	private void Update() {
-		/*if(Energy < 10)
-			_energyTimer += Time.deltaTime;
-		if(_energyTimer >= 3f){
-			_energyTimer -= 3f;
-			Energy += 1;
-			if(Energy >= 10){
-				Energy = 10;
-				_energyTimer = 0f;
-			}
-		}*/
-		spookCooldown = Mathf.Clamp(spookCooldown - Time.deltaTime, 0, MaxSpookCooldown);
-		if (spookCooldown == 0 && InputManager.Input.Player.Spook.triggered)
+		
+		SpookCooldown = Mathf.Clamp(SpookCooldown - Time.deltaTime, 0, MaxSpookCooldown);
+		if (SpookCooldown == 0 && InputManager.Input.Player.Spook.triggered)
 		{
 			_spookSound.Play();
 			spookCooldown = MaxSpookCooldown;

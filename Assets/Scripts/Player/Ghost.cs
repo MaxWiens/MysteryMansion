@@ -9,6 +9,7 @@ public class Ghost : MonoBehaviour {
 
 	public int Energy = 0;
 	private float _energyTimer = 0f;
+	private float spookCooldown;
 
 	private Haunt _hauntTarget = null;
 	
@@ -22,13 +23,19 @@ public class Ghost : MonoBehaviour {
 	private Sprite notEnoughEnergySprite = null;
 	[SerializeField]
 	private TMP_Text costText;
+	[SerializeField]
+	private TriggerColliderScript spookCollider;
+
+	private const float MaxSpookCooldown = 4;
+	const int MaxEnergy = 10;
 
 	private void Start() {
 		_hauntIndicatorRenderer.enabled = false;
+		spookCooldown = 0;
 	}
 
 	private void Update() {
-		if(Energy < 10)
+		/*if(Energy < 10)
 			_energyTimer += Time.deltaTime;
 		if(_energyTimer >= 3f){
 			_energyTimer -= 3f;
@@ -37,6 +44,23 @@ public class Ghost : MonoBehaviour {
 				Energy = 10;
 				_energyTimer = 0f;
 			}
+		}*/
+		spookCooldown = Mathf.Clamp(spookCooldown - Time.deltaTime, 0, MaxSpookCooldown);
+		if (spookCooldown == 0 && InputManager.Input.Player.Spook.triggered)
+		{
+			spookCooldown = MaxSpookCooldown;
+			for (int i = 0; i < spookCollider.CollidersHit; i++)
+			{
+				Human human = spookCollider[i].transform.parent.GetComponent<Human>();
+				if (human != null)
+				{
+					human.Spook();
+					Energy += 1;
+				}
+			}
+
+			if (Energy > MaxEnergy)
+				Energy = MaxEnergy;
 		}
 
 		Collider[] colliders = Physics.OverlapSphere(transform.position, HauntRadius, (1 << LayerMask.NameToLayer("Interactible")) | (1 << LayerMask.NameToLayer("Haunt")));

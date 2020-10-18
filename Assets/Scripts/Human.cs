@@ -38,6 +38,7 @@ public class Human : LivingThing
     const float InteractDistance = 1f;
     const float FindInteractableDistance = 7.5f;
     const float MaxTerror = 30f;
+    const float PanicEnd = MaxTerror / 2;
 
     private static int obstacleBitmask;
     private static int monsterAndObstacleBitmask;
@@ -232,7 +233,7 @@ public class Human : LivingThing
 
         float timeElapsed = 0f;
         yield return null;
-        while (Terror > MaxTerror / 2)
+        while (Terror > PanicEnd)
         {
             timeElapsed += Time.deltaTime;
             if (timeElapsed >= 1f)
@@ -530,5 +531,20 @@ public class Human : LivingThing
     {
         yield return new WaitForSeconds(120);
         investigatedInteractibles.Remove(i);
+    }
+
+    public void Spook()
+    {
+        if (Terror < PanicEnd)
+        {
+            Terror = PanicEnd + 2;
+            StopCoroutine(currentActionCooroutine);
+            currentActionCooroutine = Panic(transform.forward * 10);
+            StartCoroutine(currentActionCooroutine);
+        }
+        else
+        {
+            Terror += 5;
+        }
     }
 }

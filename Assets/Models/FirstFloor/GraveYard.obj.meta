@@ -3,7 +3,22 @@ guid: 7688dd8573033494a99bbd59c69db5ac
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Brick
+    second: {fileID: 2100000, guid: 39dd4aefb2617124b9e6dca2edf2ab73, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Fence
+    second: {fileID: 2100000, guid: be41ff629064aee4f86f1c85eb73490b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Grass
+    second: {fileID: 2100000, guid: 9ccd84f6464e1584c9ab5502e984dc71, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0

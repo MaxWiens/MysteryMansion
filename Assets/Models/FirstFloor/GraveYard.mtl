@@ -1,10 +1,35 @@
 # Blender MTL File: 'FirstFloor.blend'
-# Material Count: 1
+# Material Count: 3
 
-newmtl None
-Ns 500
-Ka 0.8 0.8 0.8
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
+newmtl Brick
+Ns 5.373965
+Ka 0.800000 0.800000 0.800000
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd C:\\Users\\frog\\Documents\\dev\\game\\ksu-2020f-gamejam\\Assets\\Art\\brick.png
+
+newmtl Fence
+Ns 225.000000
+Ka 0.472727 0.472727 0.472727
+Kd 0.800000 0.800000 0.800000
+Ks 0.077273 0.077273 0.077273
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd C:\\Users\\frog\\Documents\\dev\\game\\ksu-2020f-gamejam\\Assets\\Art\\GraveFence.png
+map_d C:\\Users\\frog\\Documents\\dev\\game\\ksu-2020f-gamejam\\Assets\\Art\\GraveFence.png
+
+newmtl Grass
+Ns 119.008272
+Ka 0.650000 0.650000 0.650000
+Kd 0.800000 0.800000 0.800000
+Ks 0.095455 0.095455 0.095455
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3

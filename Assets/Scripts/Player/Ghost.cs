@@ -42,7 +42,7 @@ public class Ghost : MonoBehaviour {
 		if (SpookCooldown == 0 && InputManager.Input.Player.Spook.triggered)
 		{
 			_spookSound.Play();
-			spookCooldown = MaxSpookCooldown;
+			SpookCooldown = MaxSpookCooldown;
 			for (int i = 0; i < spookCollider.CollidersHit; i++)
 			{
 				Human human = spookCollider[i].transform.parent.GetComponent<Human>();

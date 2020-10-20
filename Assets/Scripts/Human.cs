@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using static Items;
+using Random = UnityEngine.Random;
 
 public class Human : LivingThing
 {
@@ -36,6 +38,7 @@ public class Human : LivingThing
     private int maxHealth;
     private Altar altar;
     private bool canCheckAltar;
+    private bool[] altarCheckedItems;
 
     const float WalkSpeed = 2f;
     const float PanicSpeed = 2.35f;
@@ -70,6 +73,7 @@ public class Human : LivingThing
         NoiseHeard += Human_NoiseHeard;
         maxHealth = Health;
         canCheckAltar = true;
+        altarCheckedItems = new bool[Enum.GetValues(typeof(Item)).Length];
         ChooseAction();
         StartCoroutine(Heal());
     }
@@ -110,9 +114,12 @@ public class Human : LivingThing
 
     private IEnumerator Heal()
     {
-        if (Health < maxHealth)
-            Health += 1;
-        yield return new WaitForSeconds(5);
+        while (true)
+        {
+            if (Health < maxHealth)
+                Health += 1;
+            yield return new WaitForSeconds(20);
+        }
     }
 
     protected void ChooseAction()
@@ -415,7 +422,7 @@ public class Human : LivingThing
     {
         lastAction = currentAction;
         currentAction = Actions.Altar;
-        if (!Physics.Raycast(transform.position, altar.transform.position - transform.position, Vector3.Distance(altar.transform.position, transform.position), obstacleBitmask))
+        if (!altarCheckedItems[(int)MyItem] && !Physics.Raycast(transform.position, altar.transform.position - transform.position, Vector3.Distance(altar.transform.position, transform.position), obstacleBitmask))
         {
             lastAction = Actions.Altar;
             NavMeshAgent.speed = WalkSpeed;
@@ -425,6 +432,7 @@ public class Human : LivingThing
                 return Vector3.Distance(transform.position, altar.appreciationPosition.position) < InteractDistance;
             });
 
+            altarCheckedItems[(int)MyItem] = true;
             if (!altar.Appreciate(this))
             {
                 TakeDamage(1);
@@ -558,5 +566,37 @@ public class Human : LivingThing
         {
             Terror += 5;
         }
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        if (damage > 0)
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<Ghost>().AddEnergy(damage);
+        }
+
+        base.TakeDamage(damage);
+    }
+
+    protected override void OnDeath()
+    {
+        DropItem();
+        MakeNoise(80, SoundSource.HumanDeath);
+        GameObject[] humans = GameObject.FindGameObjectsWithTag("Human");
+        // Last human is dead
+        if (humans.Length == 1)
+        {
+            Time.timeScale = 0;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            GameObject.FindGameObjectWithTag("Play Panel").SetActive(false);
+            GameObject uiPanel = GameObject.FindGameObjectWithTag("UI Panel");
+            for (int i = 0; i < uiPanel.transform.childCount; i++)
+            {
+                if (uiPanel.transform.GetChild(i).CompareTag("Win Overlay"))
+                    uiPanel.transform.GetChild(i).gameObject.SetActive(true);
+            }
+        }
+        base.OnDeath();
     }
 }

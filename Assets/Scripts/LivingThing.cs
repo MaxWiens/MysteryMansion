@@ -68,56 +68,36 @@ public abstract class LivingThing : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         _oofSound.Play();
         Health -= damage;
         Debug.Log($"{this} took {damage} damage");
 
-        if (damage > 0 && this is Human)
-        {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<Ghost>().AddEnergy(damage);
-        }
-
         if (Health <= 0)
         {
-            RaycastHit raycast;
-            Vector3 point;
-            Vector3 raycastPosition = transform.position;
-            raycastPosition.y += 5;
-            if (Physics.Raycast(raycastPosition, Vector3.down, out raycast, 10f, 1 << LayerMask.NameToLayer("Default")))
-            {
-                point = raycast.point;
-            }
-            else
-            {
-                point = transform.position;
-            }
-            SpriteRenderer corpseRenderer = Instantiate(corpsePrefab, point, Quaternion.Euler(0, 0, 90)).GetComponent<SpriteRenderer>();
-            SpriteRenderer myRenderer = GetMainSpriteRenderer();
-            corpseRenderer.sprite = myRenderer.sprite;
-            if (this is Human h)
-            {
-                h.DropItem();
-                MakeNoise(80, SoundSource.HumanDeath);
-                GameObject[] humans = GameObject.FindGameObjectsWithTag("Human");
-                // Last human is dead
-                if (humans.Length == 1)
-                {
-                    Time.timeScale = 0;
-                    Cursor.visible = true;
-                    Cursor.lockState = CursorLockMode.None;
-                    GameObject.FindGameObjectWithTag("Play Panel").SetActive(false);
-                    GameObject uiPanel = GameObject.FindGameObjectWithTag("UI Panel");
-                    for (int i = 0; i < uiPanel.transform.childCount; i++)
-                    {
-                        if (uiPanel.transform.GetChild(i).CompareTag("Win Overlay"))
-                            uiPanel.transform.GetChild(i).gameObject.SetActive(true);
-                    }
-                }
-            }
-            Destroy(gameObject);
+            OnDeath();
         }
+    }
+
+    protected virtual void OnDeath()
+    {
+        RaycastHit raycast;
+        Vector3 point;
+        Vector3 raycastPosition = transform.position;
+        raycastPosition.y += 5;
+        if (Physics.Raycast(raycastPosition, Vector3.down, out raycast, 10f, 1 << LayerMask.NameToLayer("Default")))
+        {
+            point = raycast.point;
+        }
+        else
+        {
+            point = transform.position;
+        }
+        SpriteRenderer corpseRenderer = Instantiate(corpsePrefab, point, Quaternion.Euler(0, 0, 90)).GetComponent<SpriteRenderer>();
+        SpriteRenderer myRenderer = GetMainSpriteRenderer();
+        corpseRenderer.sprite = myRenderer.sprite;
+        Destroy(gameObject);
     }
 
     protected virtual void Start()
@@ -196,7 +176,7 @@ public abstract class LivingThing : MonoBehaviour
         float progress = 0;
         while (NavMeshAgent.isOnOffMeshLink)
         {
-            progress += Time.deltaTime * 2;
+            progress += Time.deltaTime;
             transform.position = Vector3.Lerp(startPosition, endPosition, progress);
 
             if (progress >= 1f)

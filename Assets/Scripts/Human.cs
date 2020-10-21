@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using static Items;
 using Random = UnityEngine.Random;
 
@@ -326,7 +328,6 @@ public class Human : LivingThing
 
     protected IEnumerator Investigate()
     {
-        IndicatorRenderer.sprite = InvestigatingSprite;
         currentAction = Actions.Investigate;
         NavMeshAgent.speed = WalkSpeed;
 
@@ -371,6 +372,7 @@ public class Human : LivingThing
         }
         else
         {
+            IndicatorRenderer.sprite = InvestigatingSprite;
             investigatedInteractibles.Add(interactible);
             Vector3 destination = col.ClosestPointOnBounds(transform.position);
             NavMeshAgent.SetDestination(destination);
@@ -386,7 +388,7 @@ public class Human : LivingThing
                 if (interactible.GetItems().Length > 1)
                     StartCoroutine(ForgetInteractible(interactible));
                 Item i = interactible.TakeItem(this);
-                if(i!= Item.None)
+                if(i != Item.None)
                     IndicatorRenderer.sprite = FoundSomethingSprite;
                     
                 if (MyItem != Item.None && i != Item.None)
@@ -586,17 +588,9 @@ public class Human : LivingThing
         // Last human is dead
         if (humans.Length == 1)
         {
-            Time.timeScale = 0;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-            GameObject.FindGameObjectWithTag("Play Panel").SetActive(false);
-            GameObject uiPanel = GameObject.FindGameObjectWithTag("UI Panel");
-            for (int i = 0; i < uiPanel.transform.childCount; i++)
-            {
-                if (uiPanel.transform.GetChild(i).CompareTag("Win Overlay"))
-                    uiPanel.transform.GetChild(i).gameObject.SetActive(true);
-            }
+            GameObject.FindGameObjectWithTag("UI Panel").GetComponent<VictoryOverlay>().DoVictory();
         }
+
         base.OnDeath();
     }
 }

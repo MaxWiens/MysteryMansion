@@ -26,6 +26,8 @@ public class Ghost : MonoBehaviour {
 	private TMP_Text costText;
 	[SerializeField]
 	private TriggerColliderScript spookCollider;
+	[SerializeField]
+	private GameObject spookParticle;
 
 	public const float MaxSpookCooldown = 5;
 	public const int MaxEnergy = 40;
@@ -39,8 +41,9 @@ public class Ghost : MonoBehaviour {
 	private void Update() {
 		//AddEnergy(5);
 		SpookCooldown = Mathf.Clamp(SpookCooldown - Time.deltaTime, 0, MaxSpookCooldown);
-		if (SpookCooldown == 0 && InputManager.Input.Player.Spook.triggered)
+		if (Time.timeScale != 0 && SpookCooldown == 0 && InputManager.Input.Player.Spook.triggered)
 		{
+			Instantiate(spookParticle, transform.position, Quaternion.identity);
 			_spookSound.Play();
 			SpookCooldown = MaxSpookCooldown;
 			for (int i = 0; i < spookCollider.CollidersHit; i++)
@@ -59,7 +62,7 @@ public class Ghost : MonoBehaviour {
 		if(_hauntTarget != null){
 			if(_hauntTarget.IsTriggered)
 				_hauntTarget = null;
-			else if(InputManager.Input.Player.Interact.triggered && Energy >= _hauntTarget.EnergyCost)
+			else if(Time.timeScale != 0 && InputManager.Input.Player.Interact.triggered && Energy >= _hauntTarget.EnergyCost)
 			{
 				Energy -= _hauntTarget.EnergyCost;
 				StartCoroutine(_hauntTarget.HauntAction());

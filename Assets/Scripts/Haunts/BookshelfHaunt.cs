@@ -30,11 +30,10 @@ public class BookshelfHaunt : Haunt
         }
         transform.rotation = end;
         _sound.Play();
+        // make it not kill people anymore
+        _bookshelfCollider.isTrigger = false;
 
         yield return new WaitForSeconds(1.5f);
-
-        // set collision back
-        _bookshelfCollider.isTrigger = false;
 
         float deathTimer_Max = 0.4f;
         float deathTimer = deathTimer_Max;

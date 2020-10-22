@@ -588,7 +588,7 @@ public class Human : LivingThing
         // Last human is dead
         if (humans.Length == 1)
         {
-            GameObject.FindGameObjectWithTag("UI Panel").GetComponent<VictoryOverlay>().DoVictory();
+            GameObject.FindGameObjectWithTag("UI Panel").GetComponent<VictoryOverlayController>().DoVictory();
         }
 
         base.OnDeath();

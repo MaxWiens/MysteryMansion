@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class VictoryOverlay : PanelAndTextFadeIn
+public class VictoryOverlayController : PanelAndTextFadeIn
 {
     public void DoVictory()
     {

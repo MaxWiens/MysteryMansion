@@ -113,13 +113,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1421923001}
-  m_LocalRotation: {x: 0.19133136, y: 0.72836083, z: -0.08416229, w: 0.65253323}
-  m_LocalPosition: {x: -4.06, y: 3.41, z: -0.39}
+  m_LocalRotation: {x: 0.13406208, y: 0.69428194, z: -0.13406208, w: 0.69428194}
+  m_LocalPosition: {x: -4.169, y: 3.48, z: 0.163}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4566413149007324519}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 21.858002, y: 98.316, z: 10.484}
+  m_LocalEulerAnglesHint: {x: 21.858002, y: 90, z: 0}
 --- !u!65 &114387531
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -226,7 +226,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 29ba60fa3a7537540be013f701e14a14,
         type: 3}
       propertyPath: m_Name
-      value: ghostcross
+      value: Altar
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 29ba60fa3a7537540be013f701e14a14,
         type: 3}

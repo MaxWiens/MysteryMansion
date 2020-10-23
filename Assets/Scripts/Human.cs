@@ -33,7 +33,6 @@ public class Human : LivingThing
 
     protected Actions currentAction;
     protected Actions lastAction;
-    private IEnumerator currentActionCooroutine;
     private List<Interactible> investigatedInteractibles;
     private bool lastInvestigateSucceeded;
     private float attackCooldown;
@@ -84,7 +83,7 @@ public class Human : LivingThing
     protected override void Update()
     {
         base.Update();
-        Terror = Terror - TerrorDrain * Time.deltaTime * (currentAction == Actions.Panic ? 3 : 1);
+        Terror -= TerrorDrain * Time.deltaTime * (currentAction == Actions.Panic ? 3 : 1);
 
 
         if (farColl.Triggered)
@@ -106,9 +105,7 @@ public class Human : LivingThing
 
         if (currentAction != Actions.Panic && Terror > PanicThreshhold && Random.Range(0f, 1f) > .9f)
         {
-            StopCoroutine(currentActionCooroutine);
-            currentActionCooroutine = Panic(transform.forward * 10);
-            StartCoroutine(currentActionCooroutine);
+            ChangeActionCoroutine(Panic(transform.forward * 10));
         }
 
         attackCooldown = Mathf.Max(0f, attackCooldown - Time.deltaTime);
@@ -124,18 +121,14 @@ public class Human : LivingThing
         }
     }
 
-    protected void ChooseAction()
+    protected override void ChooseAction()
     {
         IndicatorRenderer.sprite = null;
-        if (currentActionCooroutine != null)
-            StopCoroutine(currentActionCooroutine);
-        /*currentActionCooroutine = Move();
-        StartCoroutine(currentActionCooroutine);*/
+        /*changeActionCoroutine(Move());*/
         if (currentAction != Actions.Altar && canCheckAltar)
         {
             StartCoroutine(ResetCanCheckAltar());
-            currentActionCooroutine = CheckAltar();
-            StartCoroutine(currentActionCooroutine);
+            ChangeActionCoroutine(CheckAltar());
         }
         else
         {
@@ -147,13 +140,11 @@ public class Human : LivingThing
                         float r = Random.Range(0f, 1f);
                         if (r < .8f)
                         {
-                            currentActionCooroutine = Move();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Move());
                         }
                         else
                         {
-                            currentActionCooroutine = Investigate();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Investigate());
                         }
                         break;
                     }
@@ -165,20 +156,17 @@ public class Human : LivingThing
                         float r = Random.Range(0f, 1f);
                         if (r < .55f)
                         {
-                            currentActionCooroutine = Move();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Move());
                         }
                         else if (r < .9f)
                         {
-                            currentActionCooroutine = Idle();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Idle());
                         }
                         else
                         {
                             // Who ever said they were smart?
 
-                            currentActionCooroutine = Investigate();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Investigate());
                         }
                         break;
                     }
@@ -187,42 +175,35 @@ public class Human : LivingThing
                         float r = Random.Range(0f, 1f);
                         if (r < .475f)
                         {
-                            currentActionCooroutine = Move();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Move());
                         }
                         else if (r < .95f)
                         {
-                            currentActionCooroutine = Investigate();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Investigate());
                         }
                         else
                         {
-                            currentActionCooroutine = Idle();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Idle());
                         }
                         break;
                     }
                 case Actions.Altar:
-                    currentActionCooroutine = Move();
-                    StartCoroutine(currentActionCooroutine);
+                    ChangeActionCoroutine(Move());
                     break;
                 default:
                     {
                         float r = Random.Range(0f, 1f);
                         if (r < .4f)
                         {
-                            currentActionCooroutine = Move();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Move());
                         }
                         else if (r < .8f)
                         {
-                            currentActionCooroutine = Investigate();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Investigate());
                         }
                         else
                         {
-                            currentActionCooroutine = Idle();
-                            StartCoroutine(currentActionCooroutine);
+                            ChangeActionCoroutine(Idle());
                         }
                         break;
                     }
@@ -288,11 +269,6 @@ public class Human : LivingThing
     {
         currentAction = Actions.Move;
         NavMeshAgent.speed = WalkSpeed;
-        /*yield return new WaitUntil(() =>
-        {
-            // Check proximity to destination
-            return true;
-        });*/
         Vector3 dir = Random.onUnitSphere;
         NavMeshAgent.SetDestination(transform.position + dir * 4);
         yield return new WaitForSeconds(.5f);
@@ -348,6 +324,12 @@ public class Human : LivingThing
                 continue;
             }
 
+            if (interactible.Claimant != null)
+            {
+                colList.RemoveAt(index);
+                continue;
+            }
+
             if (investigatedInteractibles.Contains(interactible))
             {
                 colList.RemoveAt(index);
@@ -373,18 +355,23 @@ public class Human : LivingThing
         else
         {
             IndicatorRenderer.sprite = InvestigatingSprite;
-            investigatedInteractibles.Add(interactible);
             Vector3 destination = col.ClosestPointOnBounds(transform.position);
             NavMeshAgent.SetDestination(destination);
-            yield return new WaitUntil(() =>
-            {
-                return Vector3.Distance(transform.position, destination) < InteractDistance;
-            });
+            interactible.Claimant = this;
+
+            float t1 = Time.time;
+            float d = Vector3.Distance(transform.position, destination);
+            yield return WaitUntilNearbyWithTimeout(destination, InteractDistance, FindInteractableDistance + 3f);
+            Debug.Log($"Human took {Time.time - t1} seconds to get to interactible {d} distance away");
+
             NavMeshAgent.speed = 0f;
             MakeNoise(60, SoundSource.Human);
+
             yield return new WaitForSeconds(4f);
+
             if (interactible != null)
             {
+                interactible.Claimant = null;
                 if (interactible.GetItems().Length > 1)
                     StartCoroutine(ForgetInteractible(interactible));
                 Item i = interactible.TakeItem(this);
@@ -407,6 +394,7 @@ public class Human : LivingThing
                 }
                 GetItem(i);
                 lastInvestigateSucceeded = true;
+                investigatedInteractibles.Add(interactible);
             }
         }
         ChooseAction();
@@ -424,15 +412,14 @@ public class Human : LivingThing
     {
         lastAction = currentAction;
         currentAction = Actions.Altar;
-        if (!altarCheckedItems[(int)MyItem] && !Physics.Raycast(transform.position, altar.transform.position - transform.position, Vector3.Distance(altar.transform.position, transform.position), obstacleBitmask))
+        float altarDistance = Vector3.Distance(altar.transform.position, transform.position);
+        if (!altarCheckedItems[(int)MyItem] && !Physics.Raycast(transform.position, altar.transform.position - transform.position, altarDistance, obstacleBitmask))
         {
             lastAction = Actions.Altar;
             NavMeshAgent.speed = WalkSpeed;
             NavMeshAgent.SetDestination(altar.appreciationPosition.position);
-            yield return new WaitUntil(() =>
-            {
-                return Vector3.Distance(transform.position, altar.appreciationPosition.position) < InteractDistance;
-            });
+
+            yield return WaitUntilNearbyWithTimeout(altar.appreciationPosition.position, InteractDistance, altarDistance + 3f);
 
             altarCheckedItems[(int)MyItem] = true;
             if (!altar.Appreciate(this))
@@ -525,9 +512,7 @@ public class Human : LivingThing
         if (currentAction == Actions.Panic)
         {
             Terror += 5f;
-            StopCoroutine(currentActionCooroutine);
-            currentActionCooroutine = Panic(transform.forward * 10);
-            StartCoroutine(currentActionCooroutine);
+            ChangeActionCoroutine(Panic(transform.forward * 10));
         }
         else
         {
@@ -542,9 +527,7 @@ public class Human : LivingThing
             Terror += args.Volume;
             if (currentAction != Actions.Panic && Terror > PanicThreshhold + 2)
             {
-                StopCoroutine(currentActionCooroutine);
-                currentActionCooroutine = Panic(sender.transform.position);
-                StartCoroutine(currentActionCooroutine);
+                ChangeActionCoroutine(Panic(sender.transform.position - transform.position));
             }
         }
     }
@@ -560,9 +543,7 @@ public class Human : LivingThing
         if (Terror < PanicEnd)
         {
             Terror = PanicEnd + 2;
-            StopCoroutine(currentActionCooroutine);
-            currentActionCooroutine = Panic(transform.forward * 10);
-            StartCoroutine(currentActionCooroutine);
+            ChangeActionCoroutine(Panic(transform.forward * 10));
         }
         else
         {

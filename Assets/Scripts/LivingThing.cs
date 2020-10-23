@@ -67,12 +67,26 @@ public abstract class LivingThing : MonoBehaviour
             _noiseSensitivity = value;
         }
     }
+    private IEnumerator currentActionCoroutine;
+
+    protected void ChangeActionCoroutine(IEnumerator a)
+    {
+        if (currentActionCoroutine != null)
+            StopCoroutine(currentActionCoroutine);
+        currentActionCoroutine = a;
+        StartCoroutine(currentActionCoroutine);
+    }
+
+    /// <summary>
+    /// Must call ChangeActionCoroutine.
+    /// </summary>
+    protected abstract void ChooseAction();
 
     public virtual void TakeDamage(int damage)
     {
         _oofSound.Play();
         Health -= damage;
-        Debug.Log($"{this} took {damage} damage");
+        //Debug.Log($"{this} took {damage} damage");
 
         if (Health <= 0)
         {
@@ -203,5 +217,26 @@ public abstract class LivingThing : MonoBehaviour
     {
         SpriteRenderer renderer = GetComponentInChildren<SpriteRenderer>();
         return renderer;
+    }
+
+    protected WaitUntil WaitUntilNearbyWithTimeout(Vector3 destination, float range, float timeout)
+    {
+        float timeElapsed = 0f;
+        return new WaitUntil(() =>
+        {
+            if (Vector3.Distance(transform.position, destination) < range)
+            {
+                return true;
+            }
+            else
+            {
+                timeElapsed += Time.deltaTime;
+                if (timeElapsed >= timeout)
+                {
+                    ChooseAction();
+                }
+                return false;
+            }
+        });
     }
 }

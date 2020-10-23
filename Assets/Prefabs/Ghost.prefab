@@ -159,7 +159,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HauntRadius: 1
-  Energy: 0
   _spookSound: {fileID: 1540066763204098297}
   _hauntIndicatorRenderer: {fileID: 6410892619087548666}
   _hauntIndicatorTransform: {fileID: 9125020353996305266}
@@ -168,6 +167,8 @@ MonoBehaviour:
     type: 3}
   costText: {fileID: 0}
   spookCollider: {fileID: 1832685842}
+  spookParticle: {fileID: 697944091378531323, guid: ad4fe40e6a713324a9f159f59d5cca48,
+    type: 3}
 --- !u!54 &2397855959530781236
 Rigidbody:
   m_ObjectHideFlags: 0

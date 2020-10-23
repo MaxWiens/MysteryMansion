@@ -9,7 +9,6 @@ public class Monster : LivingThing
     public enum Actions { Move, Idle, Chase, InvestigateSound }
 
     protected Actions currentAction;
-    private IEnumerator currentActionCooroutine;
     private float attackCooldown;
 
     public TriggerColliderScript farColl;
@@ -46,10 +45,7 @@ public class Monster : LivingThing
                 if (nearColl[i] != null)
                 {
                     done = true;
-                    if (currentActionCooroutine != null)
-                        StopCoroutine(currentActionCooroutine);
-                    currentActionCooroutine = Chase(nearColl[0].transform.parent.position);
-                    StartCoroutine(currentActionCooroutine);
+                    ChangeActionCoroutine(Chase(nearColl[0].transform.parent.position));
                     break;
                 }
             }
@@ -61,10 +57,7 @@ public class Monster : LivingThing
                 if (medColl[i] != null)
                 {
                     done = true;
-                    if (currentActionCooroutine != null)
-                        StopCoroutine(currentActionCooroutine);
-                    currentActionCooroutine = Chase(medColl[0].transform.parent.position);
-                    StartCoroutine(currentActionCooroutine);
+                    ChangeActionCoroutine(Chase(medColl[0].transform.parent.position));
                     break;
                 }
             }
@@ -76,10 +69,7 @@ public class Monster : LivingThing
                 if (medColl[i] != null)
                 {
                     done = true;
-                    if (currentActionCooroutine != null)
-                        StopCoroutine(currentActionCooroutine);
-                    currentActionCooroutine = Chase(medColl[0].transform.parent.position);
-                    StartCoroutine(currentActionCooroutine);
+                    ChangeActionCoroutine(Chase(farColl[0].transform.parent.position));
                     break;
                 }
             }
@@ -88,12 +78,9 @@ public class Monster : LivingThing
         attackCooldown = Mathf.Max(0f, attackCooldown - Time.deltaTime);
     }
 
-    protected void ChooseAction()
+    protected override void ChooseAction()
     {
-        if (currentActionCooroutine != null)
-            StopCoroutine(currentActionCooroutine);
-        /*currentActionCooroutine = Move();
-        StartCoroutine(currentActionCooroutine);*/
+        /*changeActionCoroutine(Move());*/
         switch (currentAction)
         {
             case Actions.Idle:
@@ -101,13 +88,11 @@ public class Monster : LivingThing
                     float r = Random.Range(0f, 1f);
                     if (r < .7f)
                     {
-                        currentActionCooroutine = Move();
-                        StartCoroutine(currentActionCooroutine);
+                        ChangeActionCoroutine(Move());
                     }
                     else
                     {
-                        currentActionCooroutine = Idle();
-                        StartCoroutine(currentActionCooroutine);
+                        ChangeActionCoroutine(Idle());
                     }
                     break;
                 }
@@ -116,13 +101,11 @@ public class Monster : LivingThing
                     float r = Random.Range(0f, 1f);
                     if (r < .6f)
                     {
-                        currentActionCooroutine = Move();
-                        StartCoroutine(currentActionCooroutine);
+                        ChangeActionCoroutine(Move());
                     }
                     else
                     {
-                        currentActionCooroutine = Idle();
-                        StartCoroutine(currentActionCooroutine);
+                        ChangeActionCoroutine(Idle());
                     }
                     break;
                 }
@@ -133,11 +116,6 @@ public class Monster : LivingThing
     {
         currentAction = Actions.Move;
         NavMeshAgent.speed = WalkSpeed;
-        /*yield return new WaitUntil(() =>
-        {
-            // Check proximity to destination
-            return true;
-        });*/
         Vector3 dir = Random.onUnitSphere;
         NavMeshAgent.SetDestination(transform.position + dir * 4);
         yield return new WaitForSeconds(.5f);
@@ -184,12 +162,16 @@ public class Monster : LivingThing
         currentAction = Actions.InvestigateSound;
         NavMeshAgent.speed = WalkSpeed;
         NavMeshAgent.SetDestination(position);
-        yield return new WaitUntil(() =>
-        {
-            return Vector3.Distance(transform.position, position) < 1.5f;
-        });
+
+        float t1 = Time.time;
+        float distance = Vector3.Distance(transform.position, position);
+        yield return WaitUntilNearbyWithTimeout(position, 1.5f, distance * 1.5f);
+        Debug.Log($"Monster took {Time.time - t1} seconds to investigate sound {distance} distance away");
+
         NavMeshAgent.speed = 0;
+
         yield return new WaitForSeconds(2f);
+
         ChooseAction();
     }
 
@@ -204,14 +186,10 @@ public class Monster : LivingThing
     {
         // Hyperbolic equation thing
         float investigateChance = (1 - (1 / (1 + a.Volume * 0.3f)));
-        Debug.Log($"{this} heard a noise with a volume of {a.Volume}, has {investigateChance} chance");
+        //Debug.Log($"{this} heard a noise with a volume of {a.Volume}, has {investigateChance} chance");
         if (currentAction != Actions.Chase && Random.value < investigateChance)
         {
-            if (currentActionCooroutine != null)
-                StopCoroutine(currentActionCooroutine);
-            Vector3 target = sender.transform.position;
-            currentActionCooroutine = InvestigateNoise(new Vector3(target.x, target.y, target.z));
-            StartCoroutine(currentActionCooroutine);
+            ChangeActionCoroutine(InvestigateNoise(sender.transform.position));
         }
     }
 
@@ -220,10 +198,9 @@ public class Monster : LivingThing
         currentAction = Actions.Chase;
         NavMeshAgent.speed = ChaseSpeed;
         NavMeshAgent.SetDestination(location);
-        yield return new WaitUntil(() =>
-        {
-            return Vector3.Distance(transform.position, location) < 0.5f;
-        });
+
+        yield return WaitUntilNearbyWithTimeout(location, 0.5f, 10f);
+
         ChooseAction();
     }
 

@@ -6,6 +6,7 @@ using static Items;
 public class Interactible : MonoBehaviour
 {
     public List<Item> items;
+    public Human Claimant { get; set; }
 
     public virtual Item[] GetItems()
     {

@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1421923002}
   m_Layer: 2
-  m_Name: Camera Spot
+  m_Name: Loss Camera Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -45,7 +45,7 @@ public class Monster : LivingThing
                 if (nearColl[i] != null)
                 {
                     done = true;
-                    ChangeActionCoroutine(Chase(nearColl[0].transform.parent.position));
+                    ChangeActionCoroutine(Chase(nearColl[i].transform.parent.position));
                     break;
                 }
             }
@@ -57,7 +57,7 @@ public class Monster : LivingThing
                 if (medColl[i] != null)
                 {
                     done = true;
-                    ChangeActionCoroutine(Chase(medColl[0].transform.parent.position));
+                    ChangeActionCoroutine(Chase(medColl[i].transform.parent.position));
                     break;
                 }
             }
@@ -69,7 +69,7 @@ public class Monster : LivingThing
                 if (medColl[i] != null)
                 {
                     done = true;
-                    ChangeActionCoroutine(Chase(farColl[0].transform.parent.position));
+                    ChangeActionCoroutine(Chase(farColl[i].transform.parent.position));
                     break;
                 }
             }

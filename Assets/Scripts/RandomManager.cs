@@ -5,8 +5,8 @@ using static Items;
 
 public class RandomManager : MonoBehaviour
 {
-    public GameObject playerPrefab;
-    public Transform playerSpawnpoint;
+    public GameObject humanPrefab;
+    public Transform humanSpawnpoint;
     public List<Sprite> humanSprites;
     public List<Item> items;
 
@@ -19,8 +19,8 @@ public class RandomManager : MonoBehaviour
         float angle = 2 * Mathf.PI / HumansToSpawn;
         for (int i = 0; i < HumansToSpawn; i++)
         {
-            Vector3 pos = playerSpawnpoint.position + new Vector3(Mathf.Cos(angle * i), 0, Mathf.Sin(angle * i));
-            Human h = Instantiate(playerPrefab, pos, Quaternion.identity).GetComponent<Human>();
+            Vector3 pos = humanSpawnpoint.position + new Vector3(Mathf.Cos(angle * i), 0, Mathf.Sin(angle * i));
+            Human h = Instantiate(humanPrefab, pos, Quaternion.identity).GetComponent<Human>();
             if (spritesLeft.Count == 0)
                 spritesLeft.AddRange(humanSprites);
             int index = Random.Range(0, spritesLeft.Count);
@@ -31,24 +31,27 @@ public class RandomManager : MonoBehaviour
                 sr.sprite = sprite;
         }
 
-        List<GameObject> interactibleObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("Interactable"));
-        if (interactibleObjects.Count == 0)
-            throw new System.Exception("No interactibles in the level, game cannot be lost.");
-        else while (interactibleObjects.Count < items.Count)
-                interactibleObjects.AddRange(interactibleObjects);
-        for(int i = 0; i < items.Count; i++)
+        if (items.Count > 0)
         {
-            int index = Random.Range(0, interactibleObjects.Count);
-            Interactible interactible = interactibleObjects[index].GetComponent<Interactible>();
-            if (interactible != null && !(interactible is WorldItem))
+            List<GameObject> interactibleObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("Interactable"));
+            if (interactibleObjects.Count == 0)
+                throw new System.Exception("No interactibles in the level, game cannot be lost.");
+            else while (interactibleObjects.Count < items.Count)
+                    interactibleObjects.AddRange(interactibleObjects);
+            for (int i = 0; i < items.Count; i++)
             {
-                if (interactible.items == null)
-                    interactible.items = new List<Item>();
+                int index = Random.Range(0, interactibleObjects.Count);
+                Interactible interactible = interactibleObjects[index].GetComponent<Interactible>();
+                if (interactible != null && !(interactible is WorldItem))
+                {
+                    if (interactible.items == null)
+                        interactible.items = new List<Item>();
 
-                interactible.items.Add(items[i]);
+                    interactible.items.Add(items[i]);
+                }
             }
         }
-
+        
         Destroy(gameObject);
     }
 }

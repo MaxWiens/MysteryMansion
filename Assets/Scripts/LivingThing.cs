@@ -224,7 +224,7 @@ public abstract class LivingThing : MonoBehaviour
         float timeElapsed = 0f;
         return new WaitUntil(() =>
         {
-            if (Vector3.Distance(transform.position, destination) < range)
+            if (Vector3.Distance(transform.position, destination) <= range)
             {
                 return true;
             }
@@ -233,7 +233,10 @@ public abstract class LivingThing : MonoBehaviour
                 timeElapsed += Time.deltaTime;
                 if (timeElapsed >= timeout)
                 {
+                    Debug.LogWarning($"Movement timed out, {this} had {timeout} to get {range} within {destination}.");
                     ChooseAction();
+                    // Must be true for the coroutine to be stopped
+                    return true;
                 }
                 return false;
             }

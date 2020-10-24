@@ -1970,46 +1970,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1661125405}
     m_Modifications:
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.27301127
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.017430872
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.00092754886
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.9618525
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.6700008
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.5999999
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 3.3200002
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 31.683
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 2.2240002
-      objectReference: {fileID: 0}
-    - target: {fileID: 1421923002, guid: 821520bcc2158df4f94bc0a283e91858, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0.521
-      objectReference: {fileID: 0}
     - target: {fileID: 3752897327009988573, guid: 821520bcc2158df4f94bc0a283e91858,
         type: 3}
       propertyPath: m_Name

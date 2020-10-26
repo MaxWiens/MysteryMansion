@@ -5,24 +5,26 @@ using static Items;
 
 public class Interactible : MonoBehaviour
 {
-    public List<Item> items;
+    private Item _item = Item.None;
+    public virtual Item Item
+    {
+        get => _item;
+        set
+        {
+            _item = value;
+        }
+    }
     public Human Claimant { get; set; }
 
-    public virtual Item[] GetItems()
+    public virtual Item GetItem()
     {
-        return items.ToArray();
+        return Item;
     }
 
-    public virtual Item TakeItem(Human human)
+    public virtual Item TakeItem()
     {
-        if (items.Count > 0)
-        {
-            int index = Random.Range(0, items.Count);
-            Item item = items[index];
-            items.RemoveAt(index);
-            return item;
-        }
-
-        return Item.None;
+        Item ret = Item;
+        Item = Item.None;
+        return ret;
     }
 }

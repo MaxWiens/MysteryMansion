@@ -34,21 +34,22 @@ public class RandomManager : MonoBehaviour
         if (items.Count > 0)
         {
             List<GameObject> interactibleObjects = new List<GameObject>(GameObject.FindGameObjectsWithTag("Interactable"));
-            if (interactibleObjects.Count == 0)
-                throw new System.Exception("No interactibles in the level, game cannot be lost.");
-            else while (interactibleObjects.Count < items.Count)
-                    interactibleObjects.AddRange(interactibleObjects);
-            for (int i = 0; i < items.Count; i++)
+            if (interactibleObjects.Count < items.Count)
+                throw new System.Exception("Not enough interactibles in the level.");
+
+            int placedItems = 0;
+            while (placedItems < items.Count)
             {
-                int index = Random.Range(0, interactibleObjects.Count);
-                Interactible interactible = interactibleObjects[index].GetComponent<Interactible>();
+                if (interactibleObjects.Count == 0)
+                    throw new System.Exception("Not enough interactibles in the level.");
+                int interactibleIndex = Random.Range(0, interactibleObjects.Count);
+                Interactible interactible = interactibleObjects[interactibleIndex].GetComponent<Interactible>();
                 if (interactible != null && !(interactible is WorldItem))
                 {
-                    if (interactible.items == null)
-                        interactible.items = new List<Item>();
-
-                    interactible.items.Add(items[i]);
+                    interactible.Item = items[placedItems];
+                    placedItems++;
                 }
+                interactibleObjects.RemoveAt(interactibleIndex);
             }
         }
         

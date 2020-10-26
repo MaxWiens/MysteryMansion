@@ -49,7 +49,8 @@ public class BookshelfHaunt : Haunt
         transform.localScale = new Vector3(0, 0, 1);
 
         Interactible interactible = GetComponent<Interactible>();
-        foreach (Item item in interactible.GetItems())
+        Item item = interactible.GetItem();
+        if (item != Item.None)
         {
             Debug.LogWarning("Spawning item");
             RaycastHit raycast;

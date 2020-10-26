@@ -6,33 +6,21 @@ using static Items;
 public class WorldItem : Interactible
 {
     private new SpriteRenderer renderer;
-    private Item _item;
-    public Item Item {
-        get => _item;
+
+    public override Item Item {
+        get => base.Item;
         set {
-            _item = value;
+            base.Item = value;
             if (renderer == null)
                 renderer = GetComponentInChildren<SpriteRenderer>();
             if (renderer != null)
-                renderer.sprite = GetSprite(_item);
+                renderer.sprite = GetSprite(Item);
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        if (renderer == null)
-            renderer = GetComponentInChildren<SpriteRenderer>();
-    }
-
-    public override Item TakeItem(Human human)
+    public override Item TakeItem()
     {
         Destroy(gameObject);
-        return _item;
-    }
-
-    public override Item[] GetItems()
-    {
-        return new Item[] { Item };
+        return Item;
     }
 }

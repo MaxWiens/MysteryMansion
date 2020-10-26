@@ -372,9 +372,7 @@ public class Human : LivingThing
             if (interactible != null)
             {
                 interactible.Claimant = null;
-                if (interactible.GetItems().Length > 1)
-                    StartCoroutine(ForgetInteractible(interactible));
-                Item i = interactible.TakeItem(this);
+                Item i = interactible.TakeItem();
                 if(i != Item.None)
                     IndicatorRenderer.sprite = FoundSomethingSprite;
                     
@@ -530,12 +528,6 @@ public class Human : LivingThing
                 ChangeActionCoroutine(Panic(sender.transform.position - transform.position));
             }
         }
-    }
-
-    private IEnumerator ForgetInteractible(Interactible i)
-    {
-        yield return new WaitForSeconds(120);
-        investigatedInteractibles.Remove(i);
     }
 
     public void Spook()

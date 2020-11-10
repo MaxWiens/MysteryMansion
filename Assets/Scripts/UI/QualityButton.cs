@@ -20,9 +20,11 @@ public class QualityButton : MonoBehaviour
         if (QualitySettings.GetQualityLevel() != level)
         {
             QualitySettings.SetQualityLevel(level, true);
-            UpdateUI();
-            other.UpdateUI();
+            PlayerPrefs.SetInt("quality", level);
         }
+
+        UpdateUI();
+        other.UpdateUI();
     }
 
     public void UpdateUI()

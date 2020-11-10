@@ -13,6 +13,7 @@ public class Altar : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip acceptanceNoise;
     public AudioClip rejectionNoise;
+    public ParticleSystem rejectionParticles;
 
     private Item spot1Item;
     private Item spot2Item;
@@ -61,7 +62,17 @@ public class Altar : MonoBehaviour
         }
 
         audioSource.PlayOneShot(rejectionNoise);
+        StartCoroutine(EmitOverTime());
         return false;
+    }
+
+    private IEnumerator EmitOverTime()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            rejectionParticles.Emit(1);
+            yield return new WaitForSeconds(Random.Range(0.05f, 0.2f));
+        }
     }
 
     private IEnumerator FinishGame(Billboard b)

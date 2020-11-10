@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour {
-	public float LookSpeed = 1f;
+	public static float LookSpeed = 1f;
 
 	[SerializeField]
 	private Transform _cameraParent = null;

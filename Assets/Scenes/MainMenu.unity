@@ -948,8 +948,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Mystery Mansion
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7dbd09ab25c4de44c9c87515d500ea68, type: 2}
+  m_sharedMaterial: {fileID: -7227302202339788072, guid: 7dbd09ab25c4de44c9c87515d500ea68,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1513,8 +1514,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Medium Quality
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7dbd09ab25c4de44c9c87515d500ea68, type: 2}
+  m_sharedMaterial: {fileID: -7227302202339788072, guid: 7dbd09ab25c4de44c9c87515d500ea68,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4796,8 +4798,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Quit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7dbd09ab25c4de44c9c87515d500ea68, type: 2}
+  m_sharedMaterial: {fileID: -7227302202339788072, guid: 7dbd09ab25c4de44c9c87515d500ea68,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5171,8 +5174,9 @@ MonoBehaviour:
   m_text: "Move: WASD\t\t\tHaunt Object: E\nSpook: Left click/Left shift\tPause:
     Escape"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7dbd09ab25c4de44c9c87515d500ea68, type: 2}
+  m_sharedMaterial: {fileID: -7227302202339788072, guid: 7dbd09ab25c4de44c9c87515d500ea68,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6646,8 +6650,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: Play
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7dbd09ab25c4de44c9c87515d500ea68, type: 2}
+  m_sharedMaterial: {fileID: -7227302202339788072, guid: 7dbd09ab25c4de44c9c87515d500ea68,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7595,8 +7600,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: High Quality
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7dbd09ab25c4de44c9c87515d500ea68, type: 2}
+  m_sharedMaterial: {fileID: -7227302202339788072, guid: 7dbd09ab25c4de44c9c87515d500ea68,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -8088,8 +8094,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: 161}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -100, y: 175}
+  m_SizeDelta: {x: 200, y: 53}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2105034408
 MonoBehaviour:
@@ -8114,8 +8120,9 @@ MonoBehaviour:
     Use your phantasmal powers to dispose of the intruders, lest they find your weakness.
     Scare or injure them to gain ghostly energy.
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7dbd09ab25c4de44c9c87515d500ea68, type: 2}
+  m_sharedMaterial: {fileID: -7227302202339788072, guid: 7dbd09ab25c4de44c9c87515d500ea68,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

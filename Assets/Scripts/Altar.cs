@@ -10,6 +10,9 @@ public class Altar : MonoBehaviour
     public Transform spot2;
     public GameObject altarItemPrefab;
     public Transform finalCameraPosition;
+    public AudioSource audioSource;
+    public AudioClip acceptanceNoise;
+    public AudioClip rejectionNoise;
 
     private Item spot1Item;
     private Item spot2Item;
@@ -27,6 +30,7 @@ public class Altar : MonoBehaviour
         {
             if (spot1Item == Item.None && spot2Item != h.MyItem)
             {
+                audioSource.PlayOneShot(acceptanceNoise);
                 spot1Item = h.MyItem;
                 h.RemoveItem();
 
@@ -41,6 +45,7 @@ public class Altar : MonoBehaviour
             }
             else if (spot2Item == Item.None && spot1Item != h.MyItem)
             {
+                audioSource.PlayOneShot(acceptanceNoise);
                 spot2Item = h.MyItem;
                 h.RemoveItem();
 
@@ -55,6 +60,7 @@ public class Altar : MonoBehaviour
             }
         }
 
+        audioSource.PlayOneShot(rejectionNoise);
         return false;
     }
 
